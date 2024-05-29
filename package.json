@@ -4,7 +4,12 @@
     "clean": "git clean -fdX --exclude=!/.*/",
     "install": "cd library && npm install && cd .. && cd viewer && npm install && cd ..",
     "build": "cd library && npm run build && cd .. && cd viewer && npm run build && cd .. && npm run copy",
-    "copy": "node .js",
-    "make": "npm run clean && npm run install && npm run build"
+    "copy": "node .js copy",
+    "make": "npm run install && npm run build",
+    "remake": "npm run clean && npm run install && npm run build",
+    "_ext": "cd extension && npx web-ext build -n {name}-v{manifest_version}-{version}.zip -o",
+    "ext2": "node .js v2 && npm run _ext",
+    "ext3": "node .js v3 && npm run _ext",
+    "ext": "npm run ext2 && npm run ext3"
   }
 }

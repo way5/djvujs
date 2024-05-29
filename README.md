@@ -66,25 +66,22 @@ and the support of the [`:where` CSS pseudo class](https://caniuse.com/mdn-css_s
 
 Clone the repo and run:
 
-```
-npm run install
-npm run build
+```sh
+npm run make
 ```` 
 
 in the root folder of the repository. The command will install all dependencies
 and create bundles of the library and viewer (the `build` folder should
 appear).
 
-Also, there is another way to do the same operations:
+There is another variant:
 
-```
-npm run make
+```sh
+npm run remake
 ```
 
-The command will clean all git-ignored files, install all the dependencies and
-build the library and viewer. However, you should have `git` installed
-and the repository should have the `.git` folder (there is no one in the
-source code uploaded to the browser extensions websites).
+It does the same as `make`, but first it removes all git-ignored files 
+(including dependencies).
 
 ## How to run it locally
 
@@ -108,27 +105,21 @@ the `viewer/package.json` file.
 
 ## How to pack the extension
 
-After the two commands above are executed (`install` and `build`), the extension
-folder will contain all the necessary files, that is to say, the folder is an
-unpacked extension. If you want to pack the extension, you should have
-the `web-ext` module installed globally, to wit, `npm install web-ext -g`, and
-then just change the directory:
+After the project has been built (`npm run make`), the extension
+folder contains all the necessary files. However, there are two manifests:
+v2 and v3. You should copy and rename one of them to `manifest.json`.
 
-```
-cd extension
-```
+After it's done, the folder is an unpacked extension - it can be
+installed in the "developer mode".
 
-and run
+If you want to pack the extension, you can either zip it yourself
+or run:
 
-```
-web-ext build
+```sh
+npm run ext # it uses "npx web-ext", so you will be asked to install the package
 ```
 
-and the packed version of the extension will appear in the extension folder.
-
-If you have some problems, read the technical documentation or create an issue.
-Also, you can download the library from the official website. (All links are
-below).
+It will pack the extension with both v2 and v3 manifests.
 
 ## Links
 
