@@ -5,3 +5,4 @@ _src
 build
 dist
 extension/web-ext-artifacts
+extension/manifest.json

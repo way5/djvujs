@@ -1,21 +1,41 @@
+/**
+ * The execution starts in the main() function
+ */
+
 'use strict';
 
-chrome.contextMenus.create({
-    id: "open_with",
-    title: "Open with DjVu.js Viewer",
-    contexts: ["link"],
-    targetUrlPatterns: [
-        '*://*/*.djvu',
-        '*://*/*.djv',
-        '*://*/*.djvu?*',
-        '*://*/*.djv?*',
+function isManifestV3() {
+    return chrome.runtime.getManifest().manifest_version === 3;
+}
 
-        '*://*/*.DJVU',
-        '*://*/*.DJV',
-        '*://*/*.DJVU?*',
-        '*://*/*.DJV?*',
-    ]
-});
+const extensionUrl = chrome.runtime.getURL('viewer.html');
+const httpRedirectRuleId = 1;
+const fileRedirectRuleId = 2;
+
+function updateContextMenu() {
+    chrome.contextMenus.removeAll();
+    chrome.contextMenus.create({
+        id: 'open_with',
+        title: 'Open with DjVu.js Viewer',
+        contexts: ['link'],
+        targetUrlPatterns: [
+            '*://*/*.djvu',
+            '*://*/*.djv',
+            '*://*/*.djvu?*',
+            '*://*/*.djv?*',
+
+            '*://*/*.DJVU',
+            '*://*/*.DJV',
+            '*://*/*.DJVU?*',
+            '*://*/*.DJV?*',
+        ]
+    });
+    chrome.contextMenus.onClicked.addListener(info => {
+        if (info.menuItemId === 'open_with') {
+            openViewerTab(info.linkUrl);
+        }
+    });
+}
 
 function promisify(func) {
     return function (...args) {
@@ -26,7 +46,6 @@ function promisify(func) {
 }
 
 const getViewerUrl = (djvuUrl = null, djvuName = null) => {
-    const extensionUrl = chrome.runtime.getURL("viewer.html");
     const params = new URLSearchParams();
     djvuUrl && params.set('url', djvuUrl);
     djvuName && params.set('name', djvuName);
@@ -34,112 +53,89 @@ const getViewerUrl = (djvuUrl = null, djvuName = null) => {
     return extensionUrl + (queryString ? '?' + queryString : '');
 };
 
-const tabIds = new Set();
-let unregisterTimeouts = {};
-let tabRemovedHandlerSet = false;
-
-const _unregisterViewerTab = tabId => {
-    if (unregisterTimeouts[tabId]) delete unregisterTimeouts[tabId];
-
-    if (tabIds.has(tabId)) {
-        tabIds.delete(tabId);
-        if (!tabIds.size) {
-            // to bypass a Chrome bug due to which GPU memory is not released after all tabs are closed
-            chrome.runtime.reload()
-        }
+const executeScript = (src, sender) => {
+    if (isManifestV3()) {
+        return chrome.scripting.executeScript({
+            files: [src],
+            target: {
+                tabId: sender.tab.id,
+                frameIds: [sender.frameId],
+            }
+        });
     }
+
+    return promisify(chrome.tabs.executeScript)(sender.tab.id, {
+        frameId: sender.frameId,
+        file: src,
+        runAt: 'document_end'
+    });
 }
 
-const unregisterViewerTab = (tabId) => {
-    if (unregisterTimeouts[tabId]) {
-        clearTimeout(unregisterTimeouts[tabId]);
-    }
+function listenForMessages() {
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        if (sender.tab && message === 'include_scripts') {
+            Promise.all([
+                executeScript('dist/djvu.js', sender),
+                executeScript('dist/djvu_viewer.js', sender),
+            ]).then(() => {
+                sendResponse();
+            })
+            return true; // do not send response immediately
+        }
 
-    // to let reload a tab with the viewer, otherwise it will be closed on attempt to reload it (if there is only one viewer tab opened).
-    unregisterTimeouts[tabId] = setTimeout(_unregisterViewerTab, 300, tabId); // in practice it doesn't exceed 150 ms (~70ms in Chrome and ~130ms in Firefox)
-};
+        if (message.command === 'open_viewer_tab') {
+            openViewerTab(message.url);
+        }
 
-const registerViewerTab = tabId => {
-    if (unregisterTimeouts[tabId]) {
-        clearTimeout(unregisterTimeouts[tabId]);
-        delete unregisterTimeouts[tabId];
-    }
-    tabIds.add(tabId);
-
-    if (!tabRemovedHandlerSet) {
-        // only to a bit improve user experience and reload the extension without a delay when a tab is closed
-        chrome.tabs.onRemoved.addListener(tabId => _unregisterViewerTab(tabId));
-        tabRemovedHandlerSet = true;
-    }
-};
-
-const executeScript = (src, sender) => promisify(chrome.tabs.executeScript)(sender.tab.id, {
-    frameId: sender.frameId,
-    file: src,
-    runAt: "document_end"
-});
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (sender.tab && message === "include_scripts") {
-        Promise.all([
-            executeScript('dist/djvu.js', sender),
-            executeScript('dist/djvu_viewer.js', sender),
-            //promisify(chrome.tabs.insertCSS)(sender.tab.id, { frameId: sender.frameId, file: 'djvu_viewer.css', runAt: "document_end" })
-        ]).then(() => {
-            sendResponse();
-        })
-        return true; // do not send response immediately
-    }
-
-    if (sender.tab && message === "register_viewer_tab") {
-        registerViewerTab(sender.tab.id);
-    }
-
-    if (sender.tab && message === "unregister_viewer_tab") {
-        unregisterViewerTab(sender.tab.id);
-    }
-
-    if (message.command === 'open_viewer_tab') {
-        openViewerTab(message.url);
-    }
-
-    sendResponse();
-})
+        sendResponse();
+    });
+}
 
 function openViewerTab(djvuUrl = null) {
     chrome.tabs.create({ url: getViewerUrl(djvuUrl) });
 }
 
-chrome.browserAction.onClicked.addListener(() => openViewerTab());
+function enableFileOpeningInterception() {
+    if (isManifestV3()) {
+        chrome.declarativeNetRequest.updateDynamicRules({
+            removeRuleIds: [fileRedirectRuleId],
+            addRules: [{
+                id: fileRedirectRuleId,
+                action: {
+                    type: 'redirect',
+                    redirect: { regexSubstitution: `${extensionUrl}?url=\\0` },
+                },
+                condition: {
+                    isUrlFilterCaseSensitive: false,
+                    regexFilter: '^file:///.+\\.djvu?$',
+                    resourceTypes: ['main_frame'],
+                },
+            }],
+        });
+    } else {
+        chrome.webRequest.onBeforeRequest.addListener(details => {
+                return { redirectUrl: getViewerUrl(details.url) };
+            }, {
+                urls: [
+                    'file:///*/*.djvu',
+                    'file:///*/*.djvu?*',
+                    'file:///*/*.djv',
+                    'file:///*/*.djv?*',
 
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-    if (info.menuItemId === "open_with") {
-        openViewerTab(info.linkUrl);
+                    'file:///*/*.DJVU',
+                    'file:///*/*.DJVU?*',
+                    'file:///*/*.DJV',
+                    'file:///*/*.DJV?*',
+                ],
+                types: ['main_frame']
+            },
+            ['blocking']
+        );
     }
-});
-
-// interception of direct file opening
-chrome.webRequest.onBeforeRequest.addListener(details => {
-    return { redirectUrl: getViewerUrl(details.url) };
-}, {
-    urls: [
-        'file:///*/*.djvu',
-        'file:///*/*.djvu?*',
-        'file:///*/*.djv',
-        'file:///*/*.djv?*',
-
-        'file:///*/*.DJVU',
-        'file:///*/*.DJVU?*',
-        'file:///*/*.DJV',
-        'file:///*/*.DJV?*',
-    ],
-    types: ['main_frame']
-},
-    ["blocking"]
-);
+}
 
 // it shouldn't be the same function as the file opening interceptor,
-// since this event listener can be removed independently from the file opening interceptor
+// since this event listener can be removed independently of the file opening interceptor
 const requestInterceptor = details => {
     // http://*/*.djvu also corresponds to "http://localhost/page.php?file=doc.djvu"
     // so we have to add this additional check, because it's not a link to a file.
@@ -148,38 +144,62 @@ const requestInterceptor = details => {
     }
 }
 
-const onBeforeRequest = chrome.webRequest.onBeforeRequest;
+// it's "undefined" for manifest v3, because the "webRequest" permission isn't requested
+const onBeforeRequest = chrome.webRequest?.onBeforeRequest;
+const onHeadersReceived = chrome.webRequest?.onHeadersReceived;
 
 // Detect djvu only by URL
 const enableHttpIntercepting = () => {
-    !onBeforeRequest.hasListener(requestInterceptor) && onBeforeRequest.addListener(requestInterceptor, {
-        urls: [
-            'http://*/*.djvu',
-            'http://*/*.djvu?*',
-            'https://*/*.djvu',
-            'https://*/*.djvu?*',
-            'http://*/*.djv',
-            'http://*/*.djv?*',
-            'https://*/*.djv',
-            'https://*/*.djv?*',
+    if (isManifestV3()) {
+        chrome.declarativeNetRequest.updateDynamicRules({
+            removeRuleIds: [httpRedirectRuleId],
+            addRules: [{
+                id: httpRedirectRuleId,
+                action: {
+                    type: 'redirect',
+                    redirect: { regexSubstitution: `${extensionUrl}?url=\\0` },
+                },
+                condition: {
+                    isUrlFilterCaseSensitive: false,
+                    regexFilter: '^https?://[^?]+\\.djvu?(\\?.*)?',
+                    resourceTypes: ['main_frame', 'sub_frame'],
+                },
+            }],
+        });
+    } else {
+        !onBeforeRequest.hasListener(requestInterceptor) && onBeforeRequest.addListener(requestInterceptor, {
+                urls: [
+                    'http://*/*.djvu',
+                    'http://*/*.djvu?*',
+                    'https://*/*.djvu',
+                    'https://*/*.djvu?*',
+                    'http://*/*.djv',
+                    'http://*/*.djv?*',
+                    'https://*/*.djv',
+                    'https://*/*.djv?*',
 
-            'http://*/*.DJVU',
-            'http://*/*.DJVU?*',
-            'https://*/*.DJVU',
-            'https://*/*.DJVU?*',
-            'http://*/*.DJV',
-            'http://*/*.DJV?*',
-            'https://*/*.DJV',
-            'https://*/*.DJV?*',
-        ],
-        types: ['main_frame', 'sub_frame'],
-    },
-        ["blocking"]
-    );
+                    'http://*/*.DJVU',
+                    'http://*/*.DJVU?*',
+                    'https://*/*.DJVU',
+                    'https://*/*.DJVU?*',
+                    'http://*/*.DJV',
+                    'http://*/*.DJV?*',
+                    'https://*/*.DJV',
+                    'https://*/*.DJV?*',
+                ],
+                types: ['main_frame', 'sub_frame'],
+            },
+            ['blocking']
+        );
+    }
 };
 
 const disableHttpIntercepting = () => {
-    onBeforeRequest.hasListener(requestInterceptor) && onBeforeRequest.removeListener(requestInterceptor);
+    if (isManifestV3()) {
+        chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: [httpRedirectRuleId] });
+    } else {
+        onBeforeRequest.hasListener(requestInterceptor) && onBeforeRequest.removeListener(requestInterceptor);
+    }
 };
 
 const headersAnalyzer = details => {
@@ -205,8 +225,6 @@ const headersAnalyzer = details => {
         }
     }
 };
-
-const onHeadersReceived = chrome.webRequest.onHeadersReceived;
 
 const enableHeadersAnalysis = () => {
     !onHeadersReceived.hasListener(headersAnalyzer) && onHeadersReceived.addListener(headersAnalyzer, {
@@ -245,6 +263,8 @@ const onOptionsChanged = json => {
             disableHttpIntercepting();
         }
 
+        if (isManifestV3()) return;
+
         if (options.interceptHttpRequests && options.analyzeHeaders) {
             enableHeadersAnalysis();
         } else {
@@ -256,12 +276,30 @@ const onOptionsChanged = json => {
     }
 };
 
-chrome.storage.local.get('djvu_js_options', options => onOptionsChanged(options['djvu_js_options']));
+function applySavedOptions() {
+    chrome.storage.local.get('djvu_js_options', options => onOptionsChanged(options['djvu_js_options']));
+}
 
-chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === 'local' && changes['djvu_js_options']) {
-        if (changes['djvu_js_options'].newValue) {
-            onOptionsChanged(changes['djvu_js_options'].newValue);
+function listenForOptionChanges() {
+    chrome.storage.onChanged.addListener((changes, area) => {
+        if (area === 'local' && changes['djvu_js_options']) {
+            if (changes['djvu_js_options'].newValue) {
+                onOptionsChanged(changes['djvu_js_options'].newValue);
+            }
         }
-    }
-});
+    });
+}
+
+function main() {
+    // For manifest v3 onInstalled and onStartup events could be used to update the context menu
+    // and to register the file opening interception rules, but it seems to work well
+    // this way - it's updated every time the service worker is started.
+    updateContextMenu();
+    enableFileOpeningInterception();
+    chrome[isManifestV3() ? 'action' : 'browserAction'].onClicked.addListener(() => openViewerTab());
+    listenForMessages();
+    listenForOptionChanges();
+    applySavedOptions();
+}
+
+main();
