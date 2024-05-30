@@ -1,5 +1,10 @@
 # DjVu.js Viewer's Changelog
 
+## v.0.10.1 (30.05.2024)
+
+- Hide the "Analyze headers" option in the manifest v3 extension, because it's
+  not supported there.
+
 ## v.0.10.0 (26.12.2023)
 
 - Fix: reset global styles provided by some CSS frameworks.

@@ -6,7 +6,7 @@ import { ActionTypes } from "../../constants";
 import styled from 'styled-components';
 import ModalWindow from "./ModalWindow";
 import ThemeSwitcher from "../InitialScreen/ThemeSwitcher";
-import { inExtension } from "../../utils";
+import { inExtension, isManifestV3 } from "../../utils";
 import LanguageSelector from "../Language/LanguageSelector";
 
 const Root = styled.div`
@@ -78,9 +78,9 @@ export default () => {
                             })}
                         />{t("Open all links with .djvu at the end via the viewer")}
                     </ExtensionOption>
-                    <ExtensionOption
-                        title={t("Analyze headers of every new tab in order to process even links which do not end with the .djvu extension")}
-                        style={{ marginLeft: "1em" }}
+                    {isManifestV3 ? null : <ExtensionOption
+                        title={t('Analyze headers of every new tab in order to process even links which do not end with the .djvu extension')}
+                        style={{ marginLeft: '1em' }}
                     >
                         <input
                             type="checkbox"
@@ -89,8 +89,8 @@ export default () => {
                                 type: ActionTypes.UPDATE_OPTIONS,
                                 payload: { analyzeHeaders: e.target.checked, interceptHttpRequests: true }
                             })}
-                        />{t("Detect .djvu files by means of http headers")}
-                    </ExtensionOption>
+                        />{t('Detect .djvu files by means of http headers')}
+                    </ExtensionOption>}
                 </div> : null}
             </Root>
         </ModalWindow>
