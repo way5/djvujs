@@ -4,48 +4,48 @@ import { connect } from 'react-redux';
 import { FaUpload } from "react-icons/fa";
 import { TranslationContext } from '../Translation';
 import Actions from '../../actions/actions';
-import styled, { css, keyframes } from 'styled-components';
+// import styled, { css, keyframes } from 'styled-components';
 
-const FileIcon = styled(FaUpload)`
-    font-size: 1.5em;
-`;
+// const FileIcon = styled(FaUpload)`
+//     font-size: 1.5em;
+// `;
 
-const shake = keyframes`
-    from {transform: rotateY(0deg)}
-    25% {transform: rotateY(5deg)}
-    75% {transform: rotateY(-5deg)}
-    to {transform: rotateY(0deg)}
-`;
+// const shake = keyframes`
+//     from {transform: rotateY(0deg)}
+//     25% {transform: rotateY(5deg)}
+//     75% {transform: rotateY(-5deg)}
+//     to {transform: rotateY(0deg)}
+// `;
 
-const dragOverStyle = css`
-    animation: ${shake} 1s infinite linear;
-    opacity: 0.8;
-    border-color: var(--highlight-color);
-`;
+// const dragOverStyle = css`
+//     animation: ${shake} 1s infinite linear;
+//     opacity: 0.8;
+//     border-color: var(--highlight-color);
+// `;
 
-const Root = styled.div`
-    border: 0.1em dashed var(--border-color);
-    background: var(--alternative-background-color);
-    padding: 0.5em;
-    max-width: 20em;
-    min-height: 5em;
-    margin: auto;
-    border-radius: 0.5em;
-    cursor: pointer;
+// const Root = styled.div`
+//     border: 0.1em dashed var(--border-color);
+//     background: var(--alternative-background-color);
+//     padding: 0.5em;
+//     max-width: 20em;
+//     min-height: 5em;
+//     margin: auto;
+//     border-radius: 0.5em;
+//     cursor: pointer;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     justify-content: center;
 
-    &:hover {
-        ${FileIcon} {
-            transform: scale(1.1);
-        }
-    }
+//     &:hover {
+//         ${FileIcon} {
+//             transform: scale(1.1);
+//         }
+//     }
 
-    ${p => p.$dragOver ? dragOverStyle : ''};
-`;
+//     ${p => p.$dragOver ? dragOverStyle : ''};
+// `;
 
 class FileZone extends React.Component {
 
@@ -101,8 +101,12 @@ class FileZone extends React.Component {
         const t = this.context;
 
         return (
-            <Root
-                $dragOver={this.state.isDragOver}
+            <div
+                className={
+                    'file-zone'
+                    + (this.state.isDragOver ? ' drag-over-state' : '')
+                }
+                // $dragOver={this.state.isDragOver}
                 onClick={this.onClick}
                 title={t("Open another .djvu file")}
                 onDragEnter={this.checkDrag}
@@ -110,7 +114,7 @@ class FileZone extends React.Component {
                 onDragLeave={this.onDragLeave}
                 onDrop={this.onDrop}
             >
-                <FileIcon />
+                <FaUpload />
                 <span>{t('Drag & Drop a file here or click to choose manually')}</span>
                 <input
                     style={{ display: 'none' }}
@@ -119,7 +123,7 @@ class FileZone extends React.Component {
                     accept=".djvu, .djv"
                     ref={node => this.input = node}
                 />
-            </Root>
+            </div>
         );
     }
 }

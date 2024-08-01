@@ -1,39 +1,41 @@
-import React from 'react';
-import styled from "styled-components";
+import React from "react";
+// import styled from "styled-components";
 import ModalWindow from "./ModalWindow";
 import { useTranslation } from "../Translation";
 import { useDispatch, useSelector } from "react-redux";
-import { TextButton } from "../StyledPrimitives";
+// import { TextButton } from "../StyledPrimitives";
 import { get } from "../../reducers";
 import { ActionTypes } from "../../constants";
 import ProgressBar from "../misc/ProgressBar";
 import { normalizeFileName } from "../../utils";
 
-const Root = styled.div`
-    padding: 1em;
-`;
+// const Root = styled.div`
+//     padding: 1em;
+// `;
 
-const OptionButton = styled(TextButton)`
-    width: 10em;
-`;
+// const OptionButton = styled(TextButton)`
+//     width: 10em;
+// `;
 
-const OptionsWrapper = styled.div`
-    display: flex;
-    justify-content: space-around;
-    margin-top: 2em;
-`;
+// const OptionsWrapper = styled.div`
+//     display: flex;
+//     justify-content: space-around;
+//     margin-top: 2em;
+// `;
 
-const ProcessingBlock = styled.div`
-    margin-top: 2em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
+// const ProcessingBlock = styled.div`
+//     margin-top: 2em;
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+// `;
 
-const getBundledFileName = fileName => {
+const getBundledFileName = (fileName) => {
     const normalized = normalizeFileName(fileName);
-    return /(?:[^a-z]|\b)index(?:[^a-z]|\b)/.test(normalized) ? "bundled_" + normalized : normalized;
-}
+    return /(?:[^a-z]|\b)index(?:[^a-z]|\b)/.test(normalized)
+        ? "bundled_" + normalized
+        : normalized;
+};
 
 export default () => {
     const t = useTranslation();
@@ -51,7 +53,9 @@ export default () => {
 
     React.useEffect(() => {
         if (buffer) {
-            const url = URL.createObjectURL(new Blob([buffer], { type: 'image/vnd.djvu' }));
+            const url = URL.createObjectURL(
+                new Blob([buffer], { type: "image/vnd.djvu" })
+            );
             setUrl(url);
             return () => URL.revokeObjectURL(url);
         } else {
@@ -67,53 +71,98 @@ export default () => {
         <ModalWindow
             onClose={closeDialog}
             isFixedSize={false}
-            css={`width: 25em`}
+            css={`
+                width: 25em;
+            `}
         >
-            <Root>
-                {!isBundling ? <>
-                    <div css={'margin-bottom: 2em;'}>
-                        {t("You are trying to save an indirect (multi-file) document.") + ' '}
-                        {t("What exactly do you want to do?")}
-                    </div>
-                    <OptionsWrapper>
-                        <OptionButton
-                            onClick={() => {
-                                closeDialog();
-                                dispatch({ type: ActionTypes.SAVE_DOCUMENT });
-                            }}
+            <div className='save-dialog'>
+                {!isBundling ? (
+                    <>
+                        <div
+                            className='notify'
+                            // css={'margin-bottom: 2em;'}
                         >
-                            {t('Save only index file')}
-                        </OptionButton>
-                        <OptionButton onClick={() => dispatch({ type: ActionTypes.START_TO_BUNDLE })}>
-                            {t('Download, bundle and save the whole document as one file')}
-                        </OptionButton>
-                    </OptionsWrapper>
-                </> : null}
+                            {t(
+                                "You are trying to save an indirect (multi-file) document."
+                            ) + " "}
+                            {t("What exactly do you want to do?")}
+                        </div>
+                        <div className='option-wrapper'>
+                            <button
+                                className='option'
+                                onClick={() => {
+                                    closeDialog();
+                                    dispatch({
+                                        type: ActionTypes.SAVE_DOCUMENT,
+                                    });
+                                }}
+                            >
+                                {t("Save only index file")}
+                            </button>
+                            <button
+                                className='option'
+                                onClick={() =>
+                                    dispatch({
+                                        type: ActionTypes.START_TO_BUNDLE,
+                                    })
+                                }
+                            >
+                                {t(
+                                    "Download, bundle and save the whole document as one file"
+                                )}
+                            </button>
+                        </div>
+                    </>
+                ) : null}
 
-                {isBundling ?
-                    <ProcessingBlock>
-                        {!url ?
+                {isBundling ? (
+                    <div className='processing-block'>
+                        {!url ? (
                             <>
-                                <div css={`text-align: center; margin-bottom: 1em;`}>
-                                    {t("Downloading and bundling the document")}... {percentage}%
+                                <div
+                                    className='url'
+                                    // css={`
+                                    //     text-align: center;
+                                    //     margin-bottom: 1em;
+                                    // `}
+                                >
+                                    {t("Downloading and bundling the document")}
+                                    ... {percentage}%
                                 </div>
-                                <ProgressBar percentage={Math.round(progress * 100)} />
-                            </> :
+                                <ProgressBar
+                                    percentage={Math.round(progress * 100)}
+                                />
+                            </>
+                        ) : (
                             <>
-                                <div css={`text-align: center; margin-bottom: 1em;`}>
-                                    {t("The document has been downloaded and bundled into one file successfully")}
+                                <div
+                                    className='save'
+                                    // css={`
+                                    //     text-align: center;
+                                    //     margin-bottom: 1em;
+                                    // `}
+                                >
+                                    {t(
+                                        "The document has been downloaded and bundled into one file successfully"
+                                    )}
                                 </div>
-                                <TextButton
-                                    as="a"
+                                <button
+                                    className='text-button'
+                                    as='a'
                                     href={url}
                                     download={getBundledFileName(fileName)}
-                                    css={`text-decoration: none; margin: 0.5em`}
+                                    // css={`
+                                    //     text-decoration: none;
+                                    //     margin: 0.5em;
+                                    // `}
                                 >
-                                    {t('Save')}
-                                </TextButton>
-                            </>}
-                    </ProcessingBlock> : null}
-            </Root>
+                                    {t("Save")}
+                                </button>
+                            </>
+                        )}
+                    </div>
+                ) : null}
+            </div>
         </ModalWindow>
     );
-}
+};

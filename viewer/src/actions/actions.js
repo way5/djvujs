@@ -1,6 +1,6 @@
 import Constants, { ActionTypes } from '../constants';
 import { get } from '../reducers';
-import DjVu from '../DjVu';
+// import DjVu from '../DjVu';
 
 const Actions = {
 
@@ -32,7 +32,7 @@ const Actions = {
 
     closeHelpWindowAction: () => ({ type: Constants.CLOSE_HELP_WINDOW_ACTION }),
 
-    showHelpWindowAction: () => ({ type: Constants.SHOW_HELP_WINDOW_ACTION }),
+    // showHelpWindowAction: () => ({ type: Constants.SHOW_HELP_WINDOW_ACTION }),
 
     tryToSaveDocument: () => (dispatch, getState) => {
         if (get.isIndirect(getState())) {

@@ -1,18 +1,18 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { FaRegQuestionCircle } from "react-icons/fa";
-
 import Actions from '../../actions/actions';
 import { useTranslation } from "../Translation";
-import { controlButton } from "../cssMixins";
-import { ControlButtonWrapper } from '../StyledPrimitives';
+// import { controlButton } from "../cssMixins";
+// import { ControlButtonWrapper } from '../StyledPrimitives';
 
 const HelpButton = ({ withLabel = null, onClick = () => {} }) => {
     const dispatch = useDispatch();
     const t = useTranslation();
 
     return (
-        <ControlButtonWrapper
+        <span
+            className='control-button-wrapper'
             title={t("Show help window")}
             data-djvujs-class="help_button"
             onClick={() => {
@@ -20,9 +20,9 @@ const HelpButton = ({ withLabel = null, onClick = () => {} }) => {
                 onClick();
             }}
         >
-            <FaRegQuestionCircle css={controlButton} />
+            <FaRegQuestionCircle className='icon-button' />
             {withLabel ? <span>{t('About')}</span> : null}
-        </ControlButtonWrapper>
+        </span>
     );
 };
 

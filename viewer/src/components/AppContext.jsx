@@ -1,18 +1,19 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { ThemeContext, ThemeProvider } from "styled-components";
+// import { ThemeContext, ThemeProvider } from "styled-components";
 import { useDispatch } from "react-redux";
 import { ActionTypes } from "../constants";
 
 const widthThreshold = 890;
 const heightThreshold = 569;
 const defaultValue = { appWidth: widthThreshold, appHeight: heightThreshold, isMobile: false };
-export const AppContext = ThemeContext;
+// export const AppContext = ThemeContext;
+export const AppContext = React.createContext(null);
 export const useAppContext = () => React.useContext(AppContext);
 
 export const withAppContext = Component => props => (
-    <AppContext.Consumer>
-        {appContext => <Component {...props} appContext={appContext} />}
-    </AppContext.Consumer>
+        <AppContext.Consumer>
+            {appContext => <Component {...props} appContext={appContext} />}
+        </AppContext.Consumer>
 );
 
 function useAppSize(ref) {
@@ -98,8 +99,8 @@ export default ({ AppRoot }) => {
     const app = useMemo(() => <AppRoot ref={rootRef} />, [rootRef]);
 
     return (
-        <ThemeProvider theme={appContext}>
+        <AppContext.Provider value={appContext}>
             {app}
-        </ThemeProvider>
+        </AppContext.Provider>
     );
 }

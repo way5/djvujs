@@ -1,27 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FaRegPlusSquare, FaRegMinusSquare, FaCircle } from "react-icons/fa";
-import styled from 'styled-components';
+// import styled from 'styled-components';
 
-const Name = styled.div`
-    cursor: pointer;
-    margin-left: 0.5em;
-    line-height: 20px;
+// const Name = styled.div`
+//     cursor: pointer;
+//     margin-left: 0.5em;
+//     line-height: 20px;
 
-    &:hover {
-        text-decoration: underline;
-    }
-`;
+//     &:hover {
+//         text-decoration: underline;
+//     }
+// `;
 
-const Root = styled.div`
-    display: flex;
-    flex-wrap: nowrap;
-    
-    & > svg {
-        flex: 0 0 auto;
-        font-size: 20px;
-    }
-`;
+// const Root = styled.div`
+//     display: flex;
+//     flex-wrap: nowrap;
+
+//     & > svg {
+//         flex: 0 0 auto;
+//         font-size: 20px;
+//     }
+// `;
 
 export default class TreeItem extends React.Component {
 
@@ -61,17 +61,22 @@ export default class TreeItem extends React.Component {
     render() {
         const Icon = this.state.isCollapsed ? FaRegPlusSquare : FaRegMinusSquare
         return (
-            <Root>
+            <div className='tree'>
                 {this.props.children ?
                     <Icon
                         onClick={this.toggleItem}
                     /> : <FaCircle css={`transform: scale(0.5)`} />
                 }
                 <div>
-                    <Name className="name" onClick={this.onClick}>{this.props.name}</Name>
+                    <div
+                        className="name"
+                        onClick={this.onClick}
+                    >
+                        {this.props.name}
+                    </div>
                     {this.state.isCollapsed ? null : this.renderChildren()}
                 </div>
-            </Root>
+            </div>
         );
     }
 }

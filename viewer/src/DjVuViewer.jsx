@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux'
 import App from './components/App.jsx';
 import Actions from './actions/actions';
-import configureStore from './store';
+import configure from './store';
 import EventEmitter from 'eventemitter3';
 import Constants, { constant, ActionTypes } from './constants';
 import { get } from './reducers';
@@ -17,8 +17,7 @@ const Events = constant({
 
 export default class DjVuViewer extends EventEmitter {
 
-    static VERSION = '0.10.1';
-
+    // static VERSION = '0.10.1';
     static Events = Events;
     static Constants = Constants;
     static ActionTypes = ActionTypes;
@@ -34,7 +33,7 @@ export default class DjVuViewer extends EventEmitter {
      */
     constructor(config = null) {
         super();
-        this.store = configureStore(this.eventMiddleware);
+        this.store = configure(this.eventMiddleware);
         config && this.configure(config);
     }
 
@@ -119,6 +118,8 @@ export default class DjVuViewer extends EventEmitter {
      * @param {'dark'|'light'} theme
      * @param {{
           hideFullPageSwitch: boolean,
+          hideFullScreenSwithch: boolean,
+          hideDocumentInfo: boolean,
           changePageOnScroll: boolean,
           showContentsAutomatically: boolean,
           hideOpenAndCloseButtons: boolean,

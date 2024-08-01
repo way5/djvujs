@@ -34,6 +34,8 @@ export default {
         "You can improve the translation here",
 
     // Initial screen
+    "Nothing to display": "And then there were none...",
+    // default style (suspended)
     "#helpButton - learn more about the app":
         "#helpButton - learn more about the app",
     "#optionsButton - see the available options":

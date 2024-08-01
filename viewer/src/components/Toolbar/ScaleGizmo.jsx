@@ -5,27 +5,27 @@ import Actions from '../../actions/actions';
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { get } from '../../reducers';
 import { TranslationContext } from "../Translation";
-import styled from 'styled-components';
-import { iconButton, styledInput } from '../cssMixins';
+// import styled from 'styled-components';
+// import { iconButton, styledInput } from '../cssMixins';
 
-const Root = styled.span`
-    display: inline-flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: center;
+// const Root = styled.span`
+//     display: inline-flex;
+//     flex-wrap: nowrap;
+//     align-items: center;
+//     justify-content: center;
 
-    svg {
-        ${iconButton};
-        font-size: calc(var(--button-basic-size) * 0.8);
-    }
+//     svg {
+//         ${iconButton};
+//         font-size: calc(var(--button-basic-size) * 0.8);
+//     }
 
-    input {
-        ${styledInput};
-        display: inline-block;
-        width: 3em;
-        margin: 0 0.5em;
-    }
-`;
+//     input {
+//         ${styledInput};
+//         display: inline-block;
+//         width: 3em;
+//         margin: 0 0.5em;
+//     }
+// `;
 
 class ScaleGizmo extends React.Component {
 
@@ -81,7 +81,8 @@ class ScaleGizmo extends React.Component {
         const t = this.context;
 
         return (
-            <Root
+            <div
+                className='scale-gizmo'
                 title={t("You also can scale the page via Ctrl+MouseWheel")}
                 data-djvujs-id="scale_gizmo"
             >
@@ -95,7 +96,7 @@ class ScaleGizmo extends React.Component {
                     onChange={this.onChange}
                 />
                 <FaPlus onClick={this.increaseScale} />
-            </Root>
+            </div>
         );
     }
 }

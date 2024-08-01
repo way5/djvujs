@@ -2,21 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import memoize from 'memoize-one';
 import { createDeferredHandler } from '../helpers';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 
-const Root = styled.div`
-    overflow: auto;
-    padding-bottom: 30px;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    transform: translateZ(0); // removes lags when the page is changed while scrolling
+// const Root = styled.div`
+//     overflow: auto;
+//     padding-bottom: 30px;
+//     width: 100%;
+//     height: 100%;
+//     box-sizing: border-box;
+//     transform: translateZ(0); // removes lags when the page is changed while scrolling
 
-    & > div {
-        min-width: 100%;
-        position: relative;
-    }
-`;
+//     & > div {
+//         min-width: 100%;
+//         position: relative;
+//     }
+// `;
 
 /**
  * This component doesn't reset its state when the document change, so it should be recreated
@@ -28,14 +28,14 @@ export default class VirtualList extends React.PureComponent {
         itemRenderer: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
         renderingRadius: PropTypes.number,
         outerRef: PropTypes.func,
-        className: PropTypes.string,
+        // className: PropTypes.string,
         //data: PropTypes.any,
         resizeKey: PropTypes.any,
     }
 
     static defaultProps = {
         renderingRadius: 3,
-        className: '',
+        // className: 'virtual-list',
     }
 
     state = {
@@ -180,9 +180,9 @@ export default class VirtualList extends React.PureComponent {
         const itemSizes = this.props.itemSizes;
 
         return (
-            <Root
+            <div
                 ref={this.ref}
-                className={this.props.className}
+                className='virtual-list'
             >
                 {itemSizes && itemSizes.length ?
                     <div style={this.getHeightStyle(this.contentHeight)}>
@@ -190,7 +190,7 @@ export default class VirtualList extends React.PureComponent {
                     </div>
                     : null
                 }
-            </Root>
+            </div>
         );
     }
 }

@@ -1,24 +1,28 @@
 import React from 'react';
 import { useTranslation } from '../Translation';
-import { Spinner } from "../StyledPrimitives";
-import styled from "styled-components";
+import { FaSpinner } from "react-icons/fa";
+// import { Spinner } from "../StyledPrimitives";
+// import styled from "styled-components";
 
-const Root = styled.div`
-    display: flex;
-    align-items: center;
+// const Root = styled.div`
+//     display: flex;
+//     align-items: center;
 
-    span {
-        margin-left: 0.5em;
-    }
-`;
+//     span {
+//         margin-left: 0.5em;
+//     }
+// `;
 
-export default ({ style, className }) => {
+export default ({ style }) => {
     const t = useTranslation();
 
     return (
-        <Root style={style} className={className}>
-            <Spinner />
+        <div
+            style={style}
+            className='loading-phrase'
+        >
+            <FaSpinner className='spinner' />
             <span>{t('Loading')}...</span>
-        </Root>
+        </div>
     );
 };

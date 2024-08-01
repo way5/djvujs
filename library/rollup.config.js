@@ -1,11 +1,9 @@
-'use strict';
-
 const cleanup = require('rollup-plugin-cleanup');
-const resolve = require('rollup-plugin-node-resolve');
-const commonjs = require('rollup-plugin-commonjs');
+const resolve = require('@rollup/plugin-node-resolve');
+const commonjs = require('@rollup/plugin-commonjs');
 
 const outputTemplate = {
-    format: 'iife',
+    format: 'umd',
     name: 'DjVu',
     intro: "function DjVuScript() {\n'use strict';",
     outro: "}\nreturn Object.assign(DjVuScript(), {DjVuScript});"
@@ -23,4 +21,4 @@ module.exports = {
         commonjs(),
         cleanup()
     ]
-};
+}

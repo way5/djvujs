@@ -5,38 +5,38 @@ import { FaUpload } from "react-icons/fa";
 
 import Actions from '../actions/actions';
 import { TranslationContext } from './Translation';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 
-const FileIcon = styled(FaUpload)`
-    flex: 0 0 auto;
-    //font-size: var(--button-basic-size, 1.5em);
-`;
+// const FileIcon = styled(FaUpload)`
+//     flex: 0 0 auto;
+//     font-size: var(--button-basic-size, 1.5em);
+// `;
 
-const FileName = styled.span`
-    overflow: hidden;
-    flex: 0 1 auto;
-    max-width: 20em;
-    text-align: left;
-    text-overflow: ellipsis;
-    margin: 0 0.5em;
-`;
+// const FileName = styled.span`
+//     overflow: hidden;
+//     flex: 0 1 auto;
+//     max-width: 20em;
+//     text-align: left;
+//     text-overflow: ellipsis;
+//     margin: 0 0.5em;
+// `;
 
-const Root = styled.div`
-    flex: 0 1 auto;
-    cursor: pointer;
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: flex-start;
-    white-space: nowrap;
-    overflow: hidden;
+// const Root = styled.div`
+//     flex: 0 1 auto;
+//     cursor: pointer;
+//     display: flex;
+//     flex-wrap: nowrap;
+//     align-items: center;
+//     justify-content: flex-start;
+//     white-space: nowrap;
+//     overflow: hidden;
 
-    &:hover {
-        ${FileIcon} {
-            transform: scale(1.1)
-        }
-    }
-`;
+//     &:hover {
+//         ${FileIcon} {
+//             transform: scale(1.1)
+//         }
+//     }
+// `;
 
 class FileBlock extends React.Component {
 
@@ -68,13 +68,15 @@ class FileBlock extends React.Component {
         const t = this.context;
 
         return (
-            <Root
-                className="file_block"
+            <div
+                className="file-name"
                 onClick={this.onClick}
                 title={t("Open another .djvu file")}
             >
-                <FileIcon />
-                <FileName>{this.props.fileName == null ? t("Choose a file") : (this.props.fileName || '')}</FileName>
+                <FaUpload />
+                <span className='file-name'>
+                    {this.props.fileName == null ? t("Choose a file") : (this.props.fileName || '')}
+                </span>
                 <input
                     style={{ display: 'none' }}
                     type="file"
@@ -82,7 +84,7 @@ class FileBlock extends React.Component {
                     accept=".djvu, .djv"
                     ref={node => this.input = node}
                 />
-            </Root>
+            </div>
         );
     }
 }

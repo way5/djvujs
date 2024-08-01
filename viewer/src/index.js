@@ -1,3 +1,4 @@
+import './app.scss';
 import DjVu from './DjVu';
 import DjVuViewer from './DjVuViewer';
 
@@ -6,7 +7,7 @@ DjVu.Viewer = DjVuViewer;
 if (process.env.NODE_ENV !== 'production') {
     window.addEventListener('load', () => {
         if (new URLSearchParams(location.search).get('tests')) return; // do nothing in case of end-to-end tests
-
+        window.DjVu.setDebugMode(true);
         window.viewer = window.DjVuViewerInstance = new window.DjVu.Viewer({
             uiOptions: {
                 // showContentsAutomatically: false,
@@ -19,8 +20,12 @@ if (process.env.NODE_ENV !== 'production') {
                 // hideSaveButton: true,
                 // hideOpenAndCloseButtons: true,
                 // hidePrintButton: true,
+                // hideFullPageSwitch: true,
+                // hideFullScreenSwithch: true,
+                // hideDocumentInfo: true
             }
         });
+
         window.DjVuViewerInstance.render(document.getElementById('root'));
 
         window.DjVuViewerInstance.loadDocumentByUrl("/DjVu3Spec.djvu");

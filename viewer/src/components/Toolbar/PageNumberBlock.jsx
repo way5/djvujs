@@ -1,47 +1,48 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { FaRegArrowAltCircleLeft, FaRegArrowAltCircleRight } from "react-icons/fa";
-
-import Actions from '../../actions/actions';
-import PageNumberElement from './PageNumber';
-import { get } from '../../reducers';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import {
+    FaRegArrowAltCircleLeft,
+    FaRegArrowAltCircleRight,
+} from "react-icons/fa";
+import Actions from "../../actions/actions";
+import PageNumberElement from "./PageNumber";
+import { get } from "../../reducers";
 import { TranslationContext } from "../Translation";
-import styled, { css } from 'styled-components';
-import { controlButton } from "../cssMixins";
+// import styled, { css } from 'styled-components';
+// import { controlButton } from "../cssMixins";
 
-const Root = styled.div`
-    margin: 0 0.5em;
-    flex: 0 0 auto;
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-`;
+// const Root = styled.div`
+//     margin: 0 0.5em;
+//     flex: 0 0 auto;
+//     display: flex;
+//     flex-wrap: nowrap;
+//     justify-content: center;
+//     align-items: center;
+//     height: 100%;
+// `;
 
-const navButtonStyle = css`
-    ${controlButton};
-    margin: 0 0.1em;
-    border-radius: 100%;
-    cursor: pointer;
+// const navButtonStyle = css`
+//     ${controlButton};
+//     margin: 0 0.1em;
+//     border-radius: 100%;
+//     cursor: pointer;
 
-    &:hover {
-        transform: scale(1.1);
-        box-shadow: 0 0 1px gray;
-    }
+//     &:hover {
+//         transform: scale(1.1);
+//         box-shadow: 0 0 1px gray;
+//     }
 
-    &:active {
-        background: #555;
-        color: white;
-    }
-`;
+//     &:active {
+//         background: #555;
+//         color: white;
+//     }
+// `;
 
 class PageNumberBlock extends React.Component {
-
     static propTypes = {
         pageNumber: PropTypes.number,
-        pagesQuantity: PropTypes.number
+        pagesQuantity: PropTypes.number,
     };
 
     static contextType = TranslationContext;
@@ -50,7 +51,10 @@ class PageNumberBlock extends React.Component {
         if (number >= 1 && number <= this.props.pagesQuantity) {
             this.props.setNewPageNumber(number, true);
         } else {
-            this.props.setNewPageNumber(isNext ? 1 : this.props.pagesQuantity, true);
+            this.props.setNewPageNumber(
+                isNext ? 1 : this.props.pagesQuantity,
+                true
+            );
         }
     }
 
@@ -70,33 +74,37 @@ class PageNumberBlock extends React.Component {
         const t = this.context;
 
         return (
-            <Root
+            <div
+                className='page-number-block'
                 title={t("Click on the number to enter it manually")}
-                data-djvujs-id="page_number_block"
+                data-djvujs-id='page_number_block'
             >
                 <FaRegArrowAltCircleLeft
                     onClick={this.goToPrevPage}
-                    css={navButtonStyle}
+                    // css={navButtonStyle}
+                    className='nav-button'
                 />
 
                 <PageNumberElement {...this.props} />
 
                 <FaRegArrowAltCircleRight
                     onClick={this.goToNextPage}
-                    css={navButtonStyle}
+                    // css={navButtonStyle}
+                    className='nav-button'
                 />
-            </Root>
+            </div>
         );
     }
 }
 
-export default connect(state => {
-    return {
-        pageNumber: get.currentPageNumber(state),
-        pagesQuantity: get.pagesQuantity(state)
-    };
-},
+export default connect(
+    (state) => {
+        return {
+            pageNumber: get.currentPageNumber(state),
+            pagesQuantity: get.pagesQuantity(state),
+        };
+    },
     {
-        setNewPageNumber: Actions.setNewPageNumberAction
+        setNewPageNumber: Actions.setNewPageNumberAction,
     }
 )(PageNumberBlock);

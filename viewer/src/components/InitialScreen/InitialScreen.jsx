@@ -1,67 +1,77 @@
-import React from 'react';
+import React from "react";
+import viewerPackage from "../../../package.json";
+import libPackage from "../../../../library/package.json";
+// import HelpButton from '../misc/HelpButton';
+// import FileZone from './FileZone';
+// import DjVu from '../../DjVu';
+// import { inExtension } from '../../utils';
+// import LinkBlock from './LinkBlock';
+import { useTranslation } from "../Translation";
+// import { LanguagePanel } from "../Language/LanguagePanel";
+// import styled from 'styled-components';
+// import ThemeSwitcher from './ThemeSwitcher';
+// import OptionsButton from "../misc/OptionsButton";
+// import FullPageViewButton from "../misc/FullPageViewButton";
+// import { useAppContext } from "../AppContext";
+// import LanguageSelector from "../Language/LanguageSelector";
+// import FullscreenButton from "../misc/FullscreenButton";
 
-import HelpButton from '../misc/HelpButton';
-import FileZone from './FileZone';
-import DjVu from '../../DjVu';
-import { inExtension } from '../../utils';
-import LinkBlock from './LinkBlock';
-import { useTranslation } from '../Translation';
-import { LanguagePanel } from "../Language/LanguagePanel";
-import styled from 'styled-components';
-import ThemeSwitcher from './ThemeSwitcher';
-import OptionsButton from "../misc/OptionsButton";
-import FullPageViewButton from "../misc/FullPageViewButton";
-import { useAppContext } from "../AppContext";
-import LanguageSelector from "../Language/LanguageSelector";
-import FullscreenButton from "../misc/FullscreenButton";
+// const Root = styled.div`
+//     font-size: ${p => p.theme.isMobile ? 1.5 : 2}em;
+//     text-align: center;
+//     flex: 1 1 auto;
+//     width: 100%;
+//     height: 100%;
+//     overflow: auto;
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+// `;
 
-const Root = styled.div`
-    font-size: ${p => p.theme.isMobile ? 1.5 : 2}em;
-    text-align: center;
-    flex: 1 1 auto;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
+// const InfoBlock = styled.div`
+//     width: max-content;
+//     margin: 0 auto 1em auto;
+//     text-align: left;
+//     font-size: 0.8em;
 
-const InfoBlock = styled.div`
-    width: max-content;
-    margin: 0 auto 1em auto;
-    text-align: left;
-    font-size: 0.8em;
+//     svg {
+//         font-size: 1.5em;
+//     }
 
-    svg {
-        font-size: 1.5em;
-    }
+//     div {
+//         display: flex;
+//         align-items: center;
+//         margin-bottom: 0.25em;
+//     }
+// `;
 
-    div {
-        display: flex;
-        align-items: center;
-        margin-bottom: 0.25em;
-    }
-`;
+// const Footer = styled.div`
+//     width: 100%;
+//     display: flex;
+//     justify-content: flex-end;
+//     contain: layout;
 
-const Footer = styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    contain: layout;
-
-    & > * {
-        margin-left: 0.5em;
-    }
-`;
+//     & > * {
+//         margin-left: 0.5em;
+//     }
+// `;
 
 export default () => {
     const t = useTranslation();
-    const { isMobile } = useAppContext();
+    // const { isMobile } = useAppContext();
 
     return (
-        <Root>
-            {isMobile ? <LanguageSelector /> : <LanguagePanel />}
+        <div className='initial-screen'>
+            <div className='info-block'>
+                <h5>{`${t("Nothing to display")}`}</h5>
+                <span>
+                    (
+                    {`viewer: ${viewerPackage.version} / lib: ${libPackage.version}`}
+                    )
+                </span>
+            </div>
+
+            {/* {isMobile ? <LanguageSelector /> : <LanguagePanel />}
             <ThemeSwitcher />
             <div css={`margin: auto;`}>
 
@@ -85,7 +95,7 @@ export default () => {
                 {(document.fullscreenEnabled || document.webkitFullscreenEnabled) ?
                     <FullscreenButton css={`margin-right: 0.5em;`} /> : null}
                 <FullPageViewButton />
-            </Footer>
-        </Root>
+            </Footer> */}
+        </div>
     );
 };

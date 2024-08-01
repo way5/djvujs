@@ -1,9 +1,8 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import React from "react";
+import { useDispatch } from "react-redux";
 import { FaCog } from "react-icons/fa";
-
 import { useTranslation } from "../Translation";
-import { ControlButton, ControlButtonWrapper } from '../StyledPrimitives';
+// import { ControlButton, ControlButtonWrapper } from '../StyledPrimitives';
 import { ActionTypes } from "../../constants";
 
 const OptionsButton = ({ withLabel = false, onClick = () => {} }) => {
@@ -11,17 +10,21 @@ const OptionsButton = ({ withLabel = false, onClick = () => {} }) => {
     const t = useTranslation();
 
     return (
-        <ControlButtonWrapper
+        <span
+            className='control-button-wrapper'
             title={t("Show options window")}
-            data-djvujs-class="options_button"
+            data-djvujs-class='options_button'
             onClick={() => {
-                dispatch({ type: ActionTypes.TOGGLE_OPTIONS_WINDOW, payload: true })
+                dispatch({
+                    type: ActionTypes.TOGGLE_OPTIONS_WINDOW,
+                    payload: true,
+                });
                 onClick();
             }}
         >
-            <ControlButton as={FaCog} />
-            {withLabel ? <span>{t('Options')}</span> : null}
-        </ControlButtonWrapper>
+            <FaCog className='icon-button' />
+            {withLabel ? <span>{t("Options")}</span> : null}
+        </span>
     );
 };
 

@@ -1,13 +1,13 @@
 import React from "react";
-import { ControlButton, ControlButtonWrapper } from "../StyledPrimitives";
+// import { ControlButton, ControlButtonWrapper } from "../StyledPrimitives";
 import { FaDownload } from "react-icons/fa";
-import SaveNotification from "./SaveNotification";
+// import SaveNotification from "./SaveNotification";
 import { useDispatch, useSelector } from "react-redux";
 import { get } from "../../reducers";
 import Actions from "../../actions/actions";
 import { useTranslation } from "../Translation";
 
-export default ({ withLabel = false, onClick = () => {} }) => {
+export default ({ withLabel = false, onClick = () => {}, className = "" }) => {
     const t = useTranslation();
     const dispatch = useDispatch();
     const [isNotificationShown, showNotification] = React.useState(false);
@@ -16,7 +16,8 @@ export default ({ withLabel = false, onClick = () => {} }) => {
 
     return (
         <>
-            <ControlButtonWrapper
+            <span
+                className={'control-button-wrapper' + (className ? ' ' + className : '')}
                 title={t("Save document")}
                 onClick={() => {
                     if (onSaveNotification && onSaveNotification.text) {
@@ -27,11 +28,17 @@ export default ({ withLabel = false, onClick = () => {} }) => {
                     onClick();
                 }}
             >
-                <ControlButton as={FaDownload} />
-                {withLabel ? <span>{t('Save')}</span> : null}
-            </ControlButtonWrapper>
-            {isNotificationShown ?
-                <SaveNotification onSave={saveHandler} onClose={() => showNotification(false)} /> : null}
+                {/* <ControlButton as={FaDownload} /> */}
+                <FaDownload className='icon-button' />
+                {withLabel ? <span>{t("Save")}</span> : null}
+            </span>
+            {isNotificationShown ? (
+                <div
+                    className='save-notification'
+                    onSave={saveHandler}
+                    onClose={() => showNotification(false)}
+                />
+            ) : null}
         </>
     );
 };

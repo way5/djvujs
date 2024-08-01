@@ -20,7 +20,9 @@ export default class CanvasImage extends React.Component {
     constructor(props) {
         super(props);
         this.tmpCanvas = document.createElement('canvas');
-        this.tmpCanvasCtx = this.tmpCanvas.getContext('2d');
+        this.tmpCanvasCtx = this.tmpCanvas.getContext('2d', {
+            willReadFrequently: true
+        });
         this.lastUserScale = null;
         this.redrawImageTimeout = -1;
     }

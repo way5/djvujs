@@ -1,4 +1,24 @@
-# DjVu.js
+<p align="center"> 
+
+![DjvuJS Logo](./doc/logo.jpg) 
+
+</p>
+
+This is fork of an oficial repository of [RussCoder/djvujs](https://github.com/RussCoder/djvujs); yet updated, optimized and powered by [tailwindcss](https://github.com/tailwindlabs/tailwindcss).
+
+## Table of Contents
+
+- [Table of Contents](#table-of-contents)
+- [About / О проекте](#about--о-проекте)
+- [HowTo](#howto)
+- [Tools and supported browsers](#tools-and-supported-browsers)
+- [How to build it](#how-to-build-it)
+- [How to run it locally](#how-to-run-it-locally)
+  - [Tests](#tests)
+- [How to pack the extension](#how-to-pack-the-extension)
+- [Links](#links)
+- [License / Лицензия](#license--лицензия)
+
 
 ## About / О проекте
 
@@ -35,10 +55,11 @@ html-страницу. Данное приложение служит для п�
 на `.djvu` файлы прямо в браузере, не скачивая их явно. Ссылки на расширение
 доступны ниже.
 
-## Translation (localization)
+## HowTo
 
-If you want to add a new translation to the viewer [read here](TRANSLATION.md)
-how to do it.
+- [DjvuJS Library API](./doc/Library%20API.md)
+- [i18n](./doc/Translations.md)
+
 
 ## Tools and supported browsers
 

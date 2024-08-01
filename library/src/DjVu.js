@@ -1,8 +1,13 @@
 var DjVu = {
-    VERSION: '0.5.4',
+    // VERSION: '0.5.4',
     IS_DEBUG: false,
     setDebugMode: (flag) => DjVu.IS_DEBUG = flag
 };
+
+export function getVersion() {
+    const libPackage = require('../package.json');
+    return libPackage.version;
+}
 
 export function pLimit(limit = 4) {
     const queue = [];
@@ -54,11 +59,11 @@ export function createStringFromUtf8Array(utf8array) {
 
 /**
  * Creates an array of Unicode code points from an array, representing a utf8 encoded string
- * The code assumes that the utf-8 input is well formed. Otherwise, can produce illegal code 
+ * The code assumes that the utf-8 input is well formed. Otherwise, can produce illegal code
  * points. As the practice has shown, there are ill-formed utf-8 arrays in some djvu files.
- * 
+ *
  * This function should be removed in the future. The standard TextDecoder/TextEncoder should
- * be used instead. Its was initially written only for the old Edge browser 
+ * be used instead. Its was initially written only for the old Edge browser
  * which didn't support TextDecoder.
  */
 export function utf8ToCodePoints(utf8array) {
@@ -78,7 +83,7 @@ export function utf8ToCodePoints(utf8array) {
                 codePoints.push(((c & 0x1F) << 6) | (utf8array[i++] & 0x3F));
                 break;
             case 14:
-                // 1110 xxxx  10xx xxxx  10xx xxxx      
+                // 1110 xxxx  10xx xxxx  10xx xxxx
                 codePoints.push(
                     ((c & 0x0F) << 12) |
                     ((utf8array[i++] & 0x3F) << 6) |

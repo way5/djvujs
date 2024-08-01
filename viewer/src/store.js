@@ -1,26 +1,32 @@
-import { createStore, applyMiddleware } from 'redux';
-import thunkMiddleware from 'redux-thunk';
+import { configureStore } from '@reduxjs/toolkit';
+import { thunk } from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
 
 import rootReducer from './reducers';
 import createRootSaga from './sagas/rootSaga';
 import initHotkeys from './hotkeys';
 
-const configureStore = (eventMiddleware = undefined) => {
+// const configureStore = (eventMiddleware = undefined) => {
+const configure = (eventMiddleware = undefined) => {
     const sagaMiddleware = createSagaMiddleware();
-    const store = createStore(rootReducer, applyMiddleware(
-        // store => next => action => {
-        //     const state = store.getState();
-        //     console.log(action);
-        //     next(action);
-        // },
-        thunkMiddleware,
-        sagaMiddleware,
-        eventMiddleware
-    ));
-    sagaMiddleware.run(createRootSaga(store.dispatch));
-    initHotkeys(store);
-    return store;
+    const Store = configureStore({
+        reducer: rootReducer,
+        middleware: () => {
+            return [
+                // store => next => action => {
+                //     const state = store.getState();
+                //     console.log(action);
+                //     next(action);
+                // },
+                thunk,
+                sagaMiddleware,
+                eventMiddleware
+            ];
+        }
+    });
+    sagaMiddleware.run(createRootSaga(Store.dispatch));
+    initHotkeys(Store);
+    return Store;
 };
 
-export default configureStore;
+export default configure;

@@ -94,7 +94,9 @@ function readImagesAndCreateDocument() {
     $('#filehref').hide();
     var i = 0;
     var canvas = document.createElement('canvas');
-    var ctx = canvas.getContext('2d');
+    var ctx = canvas.getContext('2d', {
+        willReadFrequently: true
+    });
     $("#procmess").text("Задание выполняется ...");
 
     var func = () => {

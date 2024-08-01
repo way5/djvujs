@@ -1,23 +1,23 @@
 import React from "react";
 import ModalWindow from "../ModalWindows/ModalWindow";
-import { TextButton } from "../StyledPrimitives";
+// import { TextButton } from "../StyledPrimitives";
 import { useSelector } from "react-redux";
 import { get } from "../../reducers";
-import styled from "styled-components";
+// import styled from "styled-components";
 
-const SaveNotification = styled.div`
-    padding: 1em;
-`;
+// const SaveNotification = styled.div`
+//     padding: 1em;
+// `;
 
-const ButtonBlock = styled.div`
-    margin-top: 1em;
-    display: flex;
-    justify-content: space-around;
+// const ButtonBlock = styled.div`
+//     margin-top: 1em;
+//     display: flex;
+//     justify-content: space-around;
 
-    ${TextButton} {
-        font-size: 0.8em;
-    }
-`;
+//     ${TextButton} {
+//         font-size: 0.8em;
+//     }
+// `;
 
 export default ({ onSave = () => {}, onClose = () => {} }) => {
     const { onSaveNotification } = useSelector(get.uiOptions);
@@ -25,31 +25,37 @@ export default ({ onSave = () => {}, onClose = () => {} }) => {
     return (
         <ModalWindow
             onClose={() => {
-                if (!onSaveNotification.yesButton && !onSaveNotification.noButton) {
+                if (
+                    !onSaveNotification.yesButton &&
+                    !onSaveNotification.noButton
+                ) {
                     onSave();
                 }
                 onClose();
             }}
             usePortal={true}
         >
-            <SaveNotification>
+            <div className='save-notification'>
                 <div>{onSaveNotification.text}</div>
-                <ButtonBlock>
-                    {onSaveNotification.yesButton ?
-                        <TextButton
+                <div className='button-block'>
+                    {onSaveNotification.yesButton ? (
+                        <button
+                            className='text-button'
                             onClick={() => {
                                 onClose();
                                 onSave();
                             }}
                         >
                             {onSaveNotification.yesButton}
-                        </TextButton> : null}
-                    {onSaveNotification.noButton ?
-                        <TextButton onClick={onClose}>
+                        </button>
+                    ) : null}
+                    {onSaveNotification.noButton ? (
+                        <button className='text-button' onClick={onClose}>
                             {onSaveNotification.noButton}
-                        </TextButton> : null}
-                </ButtonBlock>
-            </SaveNotification>
+                        </button>
+                    ) : null}
+                </div>
+            </div>
         </ModalWindow>
-    )
+    );
 };

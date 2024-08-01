@@ -1,0 +1,882 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+THEMES
+*/
+.background-color {
+    @apply bg-[#fcfcfc] dark:bg-[#1e1e1e];
+}
+.background-color-secondary {
+    @apply bg-[#eee] dark:bg-[#333333];
+}
+.background-color-modal {
+    @extend .background-color;
+}
+.text-color {
+    @apply text-gray-900 dark:text-gray-100;
+}
+.text-color-dim {
+    @apply text-gray-500 dark:text-gray-500;
+}
+.border-color {
+    @apply border-gray-400 dark:border-gray-200;
+}
+.border-color-pale {
+    @apply border-gray-400 dark:border-gray-600;
+}
+.highlight-color {
+    @apply text-orange-400 dark:text-orange-200;
+}
+.scrollbar-thumb-color {
+    @apply bg-gray-300 dark:bg-gray-500;
+}
+.modal-error-colors {
+    @apply bg-orange-400 dark:bg-red-800 text-gray-900 dark:text-gray-200
+             border-gray-700 dark:border-gray-500;
+}
+.modal-primary-colors {
+    @apply bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-gray-100
+            border-gray-700 dark:border-gray-500;
+}
+
+/*
+GENERAL
+*/
+html.disable_scroll_djvujs,
+body.disable_scroll_djvujs {
+    @apply w-full h-full overflow-hidden;
+}
+
+/*
+Reset styles to get rid of default global styles provided by some frameworks,
+e.g. https://tailwindcss.com/docs/preflight that adds "svg {display: block}".
+The specificity is (0, 0, 2) for tags and (0, 1, 1) for pseudo elements to both override the default styles,
+but not override class-based styles from styled-components.
+:not(span) and :not(html) are added to increased the specificity.
+
+We cannot use "all: revert" for svg and its children, because it will override all svg attributes,
+including "d" prop of <path>, which will make all icons invisible.
+*/
+:where(.djvujs-viewer-root) *:not(svg *):not(svg),
+div:not(span):where(.djvujs-viewer-root),
+:where(.djvujs-viewer-root, .djvujs-viewer-root *):not(html)::before,
+:where(.djvujs-viewer-root, .djvujs-viewer-root *):not(html)::after {
+    all: revert;
+}
+
+:where(.djvujs-viewer-root) :is(svg:not(span), svg *) {
+    display: revert;
+    position: revert;
+    vertical-align: revert;
+    border: revert;
+    box-sizing: revert;
+    background: revert;
+    margin: revert;
+    padding: revert;
+}
+
+/*
+ELEMENTS
+*/
+.djvujs-viewer-root {
+    @apply text-xl md:text-lg p-1 font-sans overflow-hidden relative box-border
+            h-full flex-col items-center justify-center flex;
+    @extend .background-color;
+    @extend .text-color;
+
+    a {
+        @extend .highlight-color;
+    }
+
+    *::-webkit-scrollbar {
+        @extend .background-color-secondary;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        @extend .scrollbar-thumb-color;
+    }
+
+    *::-webkit-scrollbar-corner {
+        @extend .background-color;
+    }
+
+    .icon-button {
+        @apply cursor-pointer flex-initial;
+
+        &:hover {
+            @apply transform scale-110;
+        }
+    }
+
+    .text-button {
+        @apply border border-solid rounded-sm p-1 cursor-pointer;
+        @extend .border-color;
+
+        &:hover {
+            @extend .background-color-secondary;
+        }
+
+        &:focus {
+            @apply outline-none;
+        }
+    }
+
+    .spinner {
+        @apply animate-spin animate-duration-1000 animate-infinite;
+    }
+
+    .control-button-wrapper {
+        @apply cursor-pointer;
+
+        &:hover > .control-button {
+            @apply scale-110;
+        }
+    }
+
+    .control-button {
+        @apply text-xl my-0 mx-2;
+        @extend .icon-button;
+    }
+
+    .styled-input {
+        @apply rounded-md;
+        @extend .border-color;
+        @extend .background-color;
+        @extend .text-color;
+    }
+
+    .close-button {
+        /* nothing here yet */
+    }
+
+    &.full-page-view {
+        @apply top-0 left-0 fixed w-full h-full z-10;
+    }
+
+    .language-selector {
+        @apply flex flex-wrap items-center;
+
+        span {
+            @apply mr-2;
+        }
+
+        select {
+            @apply mr-2 pr-2;
+            @extend .styled-input;
+        }
+    }
+
+    /*
+    LOADING SCREENS
+    */
+    .loading-phrase {
+        @apply flex items-center justify-center text-xl;
+
+        span {
+            @apply ml-3;
+        }
+    }
+
+    .dark-layer {
+        @apply absolute top-0 left-0 w-full h-full opacity-70 blur-sm;
+        @extend .background-color-secondary;
+    }
+
+    .loading-layer {
+        @apply text-xl;
+
+        .message-wrapper {
+            @apply absolute flex top-1/2 left-1/2 opacity-80 flex-auto justify-center items-center
+                    whitespace-nowrap -translate-x-52 -translate-y-52;
+        }
+    }
+
+    .progress-bar {
+        @apply border-solid border min-w-60 max-w-[90%] h-1 mt-2;
+        @extend .border-color-pale;
+
+        div:first-child {
+            @apply h-full bg-slate-500 dark:bg-slate-500;
+        }
+    }
+
+    .file-loading-layer {
+        @apply flex flex-col w-full items-center justify-center whitespace-nowrap;
+
+        .progress {
+            @apply mt-2 text-sm;
+            @extend .text-color-dim;
+        }
+    }
+
+    /*
+    MODALS & DIALOGS
+    */
+    .print-dialog {
+        @apply p-2;
+
+        select {
+            @apply min-w-16;
+        }
+
+        iframe {
+            @apply w-0 h-0 absolute left-0 top-0 opacity-0;
+        }
+
+        select {
+            @apply min-w-16;
+            @extend .styled-input;
+        }
+    }
+
+    .button-block {
+        @apply mt-4 flex justify-around;
+
+        button {
+            @apply text-base;
+        }
+    }
+
+    .save-notification {
+        @apply p-4;
+    }
+
+    .save-dialog {
+        @apply p-4;
+
+        .notify {
+            @apply mb-8;
+        }
+
+        .option-wrapper {
+            @apply flex justify-around mt-8;
+
+            button.option {
+                @apply w-40;
+            }
+        }
+
+        .processing-block {
+            @apply mt-8 flex flex-col items-center;
+
+            .save,
+            .url {
+                @apply text-center mb-4;
+            }
+        }
+    }
+
+    .modal-window {
+        /* 0 was used to just make windows with their dark layers lie one on top of another when they are created in sequence  */
+        @apply w-full h-full left-0 top-0 absolute z-40;
+
+        .dark-layer {
+            @apply absolute top-0 left-0 w-full h-full opacity-80 z-10 blur-sm;
+            @extend .background-color-secondary;
+        }
+
+        .modal-root {
+            @apply flex-col overflow-hidden flex z-20 p-0 max-w-[90%] max-h-[90%]
+                -translate-x-[50%] -translate-y-[50%] left-1/2 top-1/2 absolute rounded-md
+                text-lg shadow-md border border-solid;
+            @extend .modal-primary-colors;
+
+            &.modal-fixed {
+                @apply h-[90%] sm:h-[80%] w-[90%] sm:w-[80%];
+            }
+
+            &.modal-error {
+                @extend .modal-error-colors;
+            }
+
+            .close-button {
+                @apply absolute top-3 right-3;
+            }
+
+            .content-wrapper {
+                @apply overflow-hidden max-h-[50%] min-w-72;
+
+                .header {
+                    @apply py-2 px-4 border-solid border-0 border-b font-bold;
+                }
+
+                .body {
+                    @apply min-h-16 mt-4 py-0 px-4 overflow-auto;
+                }
+            }
+        }
+
+        .error-window {
+            .body {
+                &.json {
+                    @apply whitespace-pre font-mono;
+                }
+            }
+        }
+    }
+
+    /*
+    COMPONENTS
+    */
+    .file-zone {
+        @apply flex items-center justify-center flex-col cursor-pointer max-w-20 min-h-5
+                p-2 border border-dashed m-auto rounded-lg;
+        @extend .border-color;
+        @extend .background-color-secondary;
+
+        &:hover {
+            & > i {
+                @apply scale-110;
+            }
+        }
+
+        &.drag-over-state {
+            @apply animate-shake animate-duration-1000 animate-infinite opacity-80;
+            @extend .border-color;
+        }
+    }
+
+    /*
+    INITIAL SCREEN
+    */
+    .initial-screen {
+        @apply text-base md:text-lg text-center flex-auto w-full h-full
+                overflow-auto flex items-center justify-center;
+
+        .info-block {
+            @apply flex flex-col justify-center items-center w-max mt-0 mb-1 mx-auto
+                    text-left h-auto;
+
+            h5 {
+                @apply text-lg m-0 p-0;
+                @extend .text-color;
+            }
+
+            span {
+                @apply text-sm;
+                @extend .text-color-dim;
+            }
+
+            /*
+            NOTE: if original screen will be used uncomment the rules below
+                  and comment ones from above
+            */
+            /* svg {
+                @apply text-lg;
+            }
+
+            div {
+                @apply flex items-center mb-1;
+            } */
+        }
+    }
+
+    /*
+    VIEWER AREA
+    */
+    .djvujs-viewer-container {
+        @apply relative flex-auto w-full h-full flex box-border overflow-hidden;
+
+        .djvujs-viewer-page {
+            @apply flex flex-auto overflow-hidden relative;
+
+            .text-block {
+                @apply overflow-auto max-h-full p-2 box-border;
+
+                pre {
+                    @apply border-solid border w-fit m-auto bg-inherit whitespace-pre-wrap p-2;
+                    @extend .border-color;
+                }
+            }
+
+            .error-page {
+                @apply bg-red-100 text-black p-4 font-mono border border-solid
+                    border-gray-400 dark:border-gray-200 overflow-auto h-full box-border;
+
+                .header {
+                    @apply font-bold text-xl mb-2;
+                }
+            }
+
+            .grab-cursor {
+                @apply cursor-grab;
+
+                * {
+                    @apply select-none;
+                }
+            }
+
+            .single-page {
+                @apply flex flex-col w-full h-full overflow-auto box-border
+                        py-4 touch-pan-x touch-pan-y;
+
+                &.djvujs-grabbing {
+                    @apply cursor-grabbing;
+                }
+
+                &:first-child {
+                    @apply m-auto p-4 opacity-100;
+                }
+            }
+
+            .virtual-list {
+                @apply overflow-auto w-full h-full box-border touch-pan-x touch-pan-y;
+                /* removes lags when the page is changed while scrolling */
+                transform: translateZ(0);
+
+                /* & > div {
+                    @apply min-w-full relative;
+                } */
+
+                &.djvujs-grabbing {
+                    @apply cursor-grabbing;
+                }
+
+                .continous-scroll {
+                    @apply box-border min-w-full px-0 flex justify-center my-4;
+                    /* just for performance optimization when continuous mode is enabled */
+                    transform: translate3d(0, 0, 0);
+                }
+            }
+
+            .complex-image {
+                @apply relative border border-solid border-gray-400 overflow-hidden;
+
+                &:first-child {
+                    @apply ml-auto;
+                }
+
+                &:last-child {
+                    @apply mr-auto;
+                }
+
+                & > div:first-child {
+                    @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2;
+
+                    img {
+                        @apply block;
+                    }
+
+                    & > canvas {
+                        @apply block;
+                    }
+                }
+
+                .text-layer {
+                    @apply overflow-hidden absolute top-0 left-0;
+
+                    & > div:first-child {
+                        @apply top-0 left-0 absolute;
+                    }
+
+                    .text-zone {
+                        @apply leading-none text-transparent
+                                text-justify absolute box-border font-serif;
+
+                        span {
+                            @apply whitespace-pre;
+                        }
+                    }
+                }
+            }
+        }
+
+        /*
+        LEFT SIDEBAR
+        */
+        .left-panel {
+            @apply h-full p-0 w-[70%] sm:w-[30%] border border-solid flex
+                    items-center justify-between box-border text-base mb-2 !select-none;
+            transition:
+                margin-left 0.3s,
+                width 0.3s;
+            @extend .border-color;
+            @extend .background-color;
+
+            &.mobile {
+                @apply absolute z-10 top-0 left-0 h-full w-[100%];
+            }
+
+            &.open {
+                @apply ml-0;
+            }
+
+            &.fast-emerge {
+                @apply transition-none;
+            }
+            /* miind the margin left of root element */
+            &.closed {
+                @apply -ml-[70%] sm:-ml-[30%];
+
+                &.mobile {
+                    @apply -ml-[100%];
+                }
+            }
+
+            .contents-panel-wrapper {
+                @apply h-full w-full overflow-hidden flex flex-col items-start justify-center;
+
+                .panel-contents {
+                    @apply p-2 box-border h-full w-full overflow-auto;
+
+                    .no-content {
+                        @apply flex w-full h-full justify-center items-center font-thin text-sm;
+                    }
+
+                    .header {
+                        @apply border-solid border-0 border-b text-xl mb-2 pb-1 flex
+                                justify-between items-center;
+                        @extend .border-color;
+
+                        span:first-child {
+                            @apply mr-2 overflow-hidden text-ellipsis;
+                        }
+                    }
+
+                    .tree {
+                        @apply flex flex-nowrap justify-start items-start;
+
+                        & > svg {
+                            @apply text-lg cursor-pointer;
+
+                            &:hover {
+                                @apply scale-90;
+                            }
+                        }
+
+                        .name {
+                            @apply cursor-pointer ml-2 leading-5 text-xl md:text-sm select-none;
+
+                            &:hover {
+                                @apply underline;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .page-border {
+                @apply box-border h-full w-2 relative flex flex-col justify-center
+                        items-center border-solid border-0 border-l touch-pan-x touch-pan-y;
+                @extend .border-color;
+
+                div {
+                    @apply w-1 h-1 mb-1 bg-gray-400 dark:bg-gray-200 scale-x-75 scale-y-125 rotate-45;
+                }
+
+                &:hover {
+                    @apply cursor-col-resize;
+                }
+            }
+        }
+    }
+
+    .invisible-layer {
+        @apply absolute bottom-0 w-full z-10;
+        height: calc(42px + theme("height.2") * 2);
+    }
+
+    /*
+    TOOLBAR
+    */
+    .djvujs-viewer-toolbar {
+        @apply self-stretch relative border border-solid rounded-t-lg py-2 px-3
+                flex flex-nowrap justify-between items-center z-20 box-border
+                transition-[margin-bottom] duration-500 mt-2 !select-none;
+        @extend .border-color;
+
+        &.hidden-state {
+            /* -1px just for cypress */
+            --margin-value: calc(-42px - theme("height.2") - 1px);
+            @apply mb-[var(--margin-value)];
+        }
+
+        /* &.mobile {
+            & > * {
+                @apply mx-0;
+            }
+        } */
+
+        .cursor-mode-buttons {
+            @apply whitespace-nowrap gap-x-4 inline-flex;
+
+            span {
+                @apply opacity-50 flex items-center justify-center;
+
+                &.active {
+                    @apply opacity-100;
+                }
+            }
+        }
+
+        .contents-button {
+            @extend .icon-button;
+        }
+
+        .view-mode-buttons {
+            @apply items-center inline-flex h-full gap-x-4;
+
+            & > div {
+                @apply flex items-center justify-center;
+            }
+
+            & > div:not(.continous-scroll-button-wrapper),
+            .continous-scroll-button {
+                @apply opacity-50;
+            }
+
+            .continous-scroll-button-wrapper {
+                @apply box-border inline-flex items-center opacity-100 h-full overflow-hidden gap-x-2;
+
+                .continous-scroll-button {
+                    @apply inline-flex flex-col flex-nowrap justify-center
+                            items-center overflow-hidden;
+                    @extend .icon-button;
+
+                    svg {
+                        @apply h-4;
+                        /* flex: 0 0 auto; */
+                    }
+                }
+
+                .page-count {
+                    @apply inline-flex items-center;
+
+                    svg {
+                        @apply cursor-pointer;
+
+                        &[djvujs-disabled] {
+                            @apply opacity-50 cursor-not-allowed pointer-events-none;
+                        }
+
+                        &:hover {
+                            @apply scale-110;
+                        }
+                    }
+                }
+            }
+        }
+
+        /*
+        TOOLBAR -> PAGE CONTROL
+        */
+        .central-panel {
+            @apply mx-auto flex items-center justify-center gap-x-4;
+
+            .page-number-block {
+                @apply flex justify-center items-center w-full;
+
+                .nav-button {
+                    @apply my-0 mx-1 rounded-full;
+                    @extend .icon-button;
+
+                    &:hover {
+                        @apply scale-110 shadow-md;
+                    }
+
+                    &:active {
+                        @extend .background-color;
+                        @extend .text-color;
+                    }
+                }
+
+                .page-number {
+                    @apply min-w-16 max-w-32 h-full box-border whitespace-normal
+                            relative text-center;
+
+                    & > * {
+                        @apply text-center box-border;
+                    }
+
+                    input {
+                        @apply absolute left-0 top-0 w-full h-full z-10;
+                        @extend .styled-input;
+                    }
+
+                    div {
+                        @apply w-full h-full flex items-center justify-center;
+                    }
+                }
+            }
+        }
+
+        /*
+        TOOLBAR -> MENU ACTIVATOR
+        */
+        .right-panel {
+            @apply flex items-center gap-x-5 !select-none;
+
+            .hide-button {
+                @apply relative z-10 rounded-full cursor-pointer items-center flex justify-center top-0;
+                transition:
+                    transform 1s,
+                    top 0.5s;
+                @extend .background-color;
+
+                &.toolbar-hidden {
+                    @apply absolute right-12 -top-24 rotate-180 scale-[180%] border-solid border p-2;
+                    transition:
+                        transform 1s,
+                        top 0.5s;
+                }
+            }
+
+            .menu-button {
+                @apply cursor-pointer hover:scale-110;
+            }
+
+            .pin-button {
+                @apply hover:scale-110;
+                @extend .icon-button;
+
+                /* &.is-pinned {
+                    @apply rotate-45 hover:rotate-45;
+                } */
+            }
+        }
+
+        /*
+        SCALE
+        */
+        .scale-gizmo {
+            @apply inline-flex flex-nowrap items-center justify-center;
+
+            svg {
+                @apply text-base;
+                @extend .icon-button;
+            }
+
+            input {
+                @apply inline-block w-12 my-0 mx-2 py-0 px-1 text-center border-none;
+                @extend .styled-input;
+            }
+        }
+
+        /*
+        ROTATION
+        */
+        .rotation-control {
+            @apply inline-flex cursor-pointer text-center items-center gap-x-2;
+
+            div {
+                @apply min-w-10 text-center;
+            }
+        }
+
+        /*
+        MENU
+        */
+        .menu-block {
+            @apply text-base absolute right-0 z-10 max-w-[40%] min-w-60 border border-solid
+                    border-gray-300 dark:border-gray-100 rounded-tl-lg rounded-br-lg p-2 overflow-hidden
+                    flex flex-col transition-transform duration-500 shadow-md;
+            bottom: calc(100% + theme("margin.2"));
+            @extend .background-color;
+
+            &.transform-hide {
+                @apply translate-x-0;
+            }
+
+            &.transform-show {
+                --translate-value: calc(100% + theme("margin.2") * 2);
+                @apply translate-x-[var(--translate-value)];
+            }
+
+            .header {
+                @apply flex items-center border-solid border-0 border-b
+                    border-b-gray-400 dark:border-b-gray-100 mb-2 pb-2 text-lg;
+
+                svg {
+                    @apply ml-auto;
+                }
+
+                span {
+                    @apply mr-4;
+                }
+            }
+
+            .content {
+                @apply overflow-auto;
+
+                .document-wrapper {
+                    @apply border-solid border-0 border-b p-1 mb-2;
+                    @extend .border-color;
+
+                    & > div:last-child {
+                        @apply mb-2;
+                    }
+
+                    .file-name {
+                        @apply flex-initial cursor-pointer flex whitespace-nowrap items-center
+                                justify-start flex-nowrap overflow-hidden pt-1;
+
+                        &:hover {
+                            svg {
+                                @apply scale-110;
+                            }
+                        }
+
+                        .file-name {
+                            @apply overflow-hidden flex-initial max-w-80 text-left text-ellipsis my-0 mx-2;
+                        }
+                    }
+
+                    .document-controls {
+                        @apply pt-1 flex flex-col sm:flex-row justify-evenly items-center mb-2;
+                        @extend .border-color;
+
+                        & > * {
+                            @apply mb-2;
+                        }
+
+                        &.mobile-style {
+                            @apply flex flex-col pl-4 items-start border-solid border-0 border-b mb-4;
+                            @extend .border-color;
+
+                            & > * {
+                                @apply mb-2;
+                            }
+                        }
+
+                        .document-control {
+                            @apply w-full whitespace-nowrap flex items-center justify-center cursor-pointer;
+
+                            svg {
+                                @apply mr-2;
+                            }
+
+                            &:hover {
+                                & svg {
+                                    @apply scale-110;
+                                }
+                            }
+                        }
+                    }
+
+                    span.control-button {
+                        @apply ml-0;
+                        @extend .control-button;
+                    }
+                }
+
+                .mobile-control {
+                    @apply flex justify-between items-center mb-3;
+
+                    /* & > span:first-child {
+                        @apply mr-4;
+                    } */
+                }
+
+                .menu-wrapper {
+                    @apply flex flex-col p-1;
+
+                    :last-child {
+                        @apply mb-0;
+                    }
+                }
+            }
+        }
+    }
+}

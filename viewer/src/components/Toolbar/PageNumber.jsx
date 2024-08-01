@@ -1,37 +1,37 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { styledInput } from '../cssMixins';
+// import styled from 'styled-components';
+// import { styledInput } from '../cssMixins';
 
-const Root = styled.span`
-    flex: 0 0 auto;
-    min-width: 4em;
-    max-width: 8em;
-    height: 90%;
-    line-height: normal;
-    box-sizing: border-box;
-    white-space: nowrap;
-    position: relative;
-    text-align: center;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+// const Root = styled.span`
+//     flex: 0 0 auto;
+//     min-width: 4em;
+//     max-width: 8em;
+//     height: 90%;
+//     line-height: normal;
+//     box-sizing: border-box;
+//     white-space: nowrap;
+//     position: relative;
+//     text-align: center;
+//     display: inline-flex;
+//     align-items: center;
+//     justify-content: center;
 
-    & > * {
-        text-align: center;
-        box-sizing: border-box;
-    }
+//     & > * {
+//         text-align: center;
+//         box-sizing: border-box;
+//     }
 
-    & > input {
-        ${styledInput};
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-    }
-`;
+//     & > input {
+//         ${styledInput};
+//         position: absolute;
+//         left: 0;
+//         top: 0;
+//         width: 100%;
+//         height: 100%;
+//         z-index: 1;
+//     }
+// `;
 
 export default class PageNumber extends React.Component {
 
@@ -107,7 +107,9 @@ export default class PageNumber extends React.Component {
 
     render() {
         return (
-            <Root>
+            <div
+                className='page-number'
+            >
                 {this.state.isEditing ?
                     <input
                         onKeyDown={this.onKeyDown}
@@ -118,13 +120,13 @@ export default class PageNumber extends React.Component {
                         value={this.state.tempValue === null ? this.props.pageNumber : this.state.tempValue}
                         ref={this.inputRef}
                     /> : null}
-                <span
+                <div
                     onClick={this.startPageNumberEditing}
                     style={this.state.isEditing ? { visibility: 'hidden', zIndex: -1 } : null}
                 >
                     {this.props.pageNumber + (this.props.pagesQuantity ? " / " + this.props.pagesQuantity : "")}
-                </span>
-            </Root>
+                </div>
+            </div>
         )
     }
 }

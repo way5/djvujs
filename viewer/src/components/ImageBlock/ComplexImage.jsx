@@ -1,50 +1,48 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
-import CanvasImage from './CanvasImage';
-import TextLayer from './TextLayer';
-import Constants from '../../constants';
-import styled from 'styled-components';
-import LoadingPhrase from '../misc/LoadingPhrase';
+import React from "react";
+import PropTypes from "prop-types";
+import CanvasImage from "./CanvasImage";
+import TextLayer from "./TextLayer";
+import Constants from "../../constants";
+// import styled from 'styled-components';
+import LoadingPhrase from "../misc/LoadingPhrase";
 import memoize from "memoize-one";
 
-const Root = styled.div`
-    position: relative;
-    border: 1px solid darkgray;
-    overflow: hidden;
-    
-    &:first-child {
-        margin-left: auto;
-    }
-    
-    &:last-child {
-        margin-right: auto;
-    }
+// const Root = styled.div`
+//     position: relative;
+//     border: 1px solid darkgray;
+//     overflow: hidden;
 
-    & > div:first-child {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
+//     &:first-child {
+//         margin-left: auto;
+//     }
 
-        img {
-            display: block;
-        }
+//     &:last-child {
+//         margin-right: auto;
+//     }
 
-        & > canvas {
-            display: block;
-        }
+//     & > div:first-child {
+//         position: absolute;
+//         left: 50%;
+//         top: 50%;
+//         transform: translateX(-50%) translateY(-50%);
 
-        ${p => p.$rotation ? `transform: translateX(-50%) translateY(-50%) rotate(${p.$rotation}deg)` : ''};
-    }
-`;
+//         img {
+//             display: block;
+//         }
+
+//         & > canvas {
+//             display: block;
+//         }
+
+//         ${p => p.$rotation ? `transform: translateX(-50%) translateY(-50%) rotate(${p.$rotation}deg)` : ''};
+//     }
+// `;
 
 /**
  * A component encapsulating the text layer, the canvas image, and adding additional wrapper to fix the size of the block,
  * when the element is rotated.
  */
 class ComplexImage extends React.PureComponent {
-
     static propTypes = {
         imageData: PropTypes.object,
         imageUrl: PropTypes.string,
@@ -78,16 +76,22 @@ class ComplexImage extends React.PureComponent {
         if (maxDimension <= dimensionThreshold) return image;
 
         const createTempCanvas = (image, x, y, width, height) => {
-            const canvas = document.createElement('canvas');
+            const canvas = document.createElement("canvas");
             canvas.width = width;
             canvas.height = height;
-            const ctx = canvas.getContext('2d', { alpha: false });
+            const ctx = canvas.getContext("2d", {
+                alpha: false,
+                willReadFrequently: true,
+            });
             ctx.putImageData(image, -x, -y, x, y, width, height);
             return canvas;
         };
 
-        const outputCanvas = document.createElement('canvas');
-        const outputCtx = outputCanvas.getContext('2d', { alpha: false });
+        const outputCanvas = document.createElement("canvas");
+        const outputCtx = outputCanvas.getContext("2d", {
+            alpha: false,
+            willReadFrequently: true,
+        });
 
         const halfWidth = Math.floor(width / 2);
         const halfHeight = Math.floor(height / 2);
@@ -100,92 +104,155 @@ class ComplexImage extends React.PureComponent {
         outputCanvas.width = width1 + width2;
         outputCanvas.height = height1 + height2;
 
-        const drawImage = (x, y, width, height, destX, destY, destWidth, destHeight) => outputCtx.drawImage(
-            createTempCanvas(image, x, y, width, height),
-            0, 0, width, height,
-            destX, destY, destWidth, destHeight,
+        const drawImage = (
+            x,
+            y,
+            width,
+            height,
+            destX,
+            destY,
+            destWidth,
+            destHeight
+        ) =>
+            outputCtx.drawImage(
+                createTempCanvas(image, x, y, width, height),
+                0,
+                0,
+                width,
+                height,
+                destX,
+                destY,
+                destWidth,
+                destHeight
+            );
+
+        drawImage(0, 0, halfWidth, halfHeight, 0, 0, width1, height1);
+        drawImage(
+            halfWidth,
+            0,
+            width - halfWidth,
+            halfHeight,
+            width1,
+            0,
+            width2,
+            height1
+        );
+        drawImage(
+            0,
+            halfHeight,
+            halfWidth,
+            height - halfHeight,
+            0,
+            height1,
+            width1,
+            height2
+        );
+        drawImage(
+            halfWidth,
+            halfHeight,
+            width - halfWidth,
+            height - halfHeight,
+            width1,
+            height1,
+            width2,
+            height2
         );
 
-        drawImage(
-            0, 0, halfWidth, halfHeight,
-            0, 0, width1, height1,
+        return outputCtx.getImageData(
+            0,
+            0,
+            outputCanvas.width,
+            outputCanvas.height
         );
-        drawImage(
-            halfWidth, 0, width - halfWidth, halfHeight,
-            width1, 0, width2, height1,
-        );
-        drawImage(
-            0, halfHeight, halfWidth, height - halfHeight,
-            0, height1, width1, height2,
-        );
-        drawImage(
-            halfWidth, halfHeight, width - halfWidth, height - halfHeight,
-            width1, height1, width2, height2,
-        );
-
-        return outputCtx.getImageData(0, 0, outputCanvas.width, outputCanvas.height);
     });
 
     render() {
-        const imageData = this.props.imageData && this.resizeImageIfRequired(this.props.imageData);
+        const imageData =
+            this.props.imageData &&
+            this.resizeImageIfRequired(this.props.imageData);
 
         const initialWidth = this.props.imageWidth || imageData.width;
         const initialHeight = this.props.imageHeight || imageData.height;
 
-        const scaleFactor = Constants.DEFAULT_DPI / this.props.imageDpi * this.props.userScale;
+        const scaleFactor =
+            (Constants.DEFAULT_DPI / this.props.imageDpi) *
+            this.props.userScale;
 
         let width, height;
-        let scaledWidth = width = Math.floor(initialWidth * scaleFactor);
-        let scaledHeight = height = Math.floor(initialHeight * scaleFactor);
+        let scaledWidth = (width = Math.floor(initialWidth * scaleFactor));
+        let scaledHeight = (height = Math.floor(initialHeight * scaleFactor));
 
         if (this.props.rotation === 90 || this.props.rotation === 270) {
             [width, height] = [height, width];
         }
 
-        return (
-            <Root
-                style={{
-                    width: width + "px",
-                    height: height + "px"
-                }}
-                $rotation={this.props.rotation}
-                ref={this.props.outerRef}
-            >
-                <div>
-                    {imageData ?
+        const innerBlock = () => {
+            return (
+                <>
+                    {imageData ? (
                         <CanvasImage
                             imageData={imageData}
                             imageDpi={this.props.imageDpi}
                             userScale={this.props.userScale}
                             key={this.props.currentPageNumber}
-                        /> :
-                        this.props.imageUrl ?
-                            <img
-                                src={this.props.imageUrl}
-                                style={{
-                                    width: scaledWidth + "px",
-                                    height: scaledHeight + "px"
-                                }}
-                                alt="djvu_page"
-                            />
-                            :
-                            <LoadingPhrase
-                                style={{
-                                    fontSize: Math.min(scaledWidth * 0.1, scaledHeight * 0.1) + 'px',
-                                    whiteSpace: 'nowrap',
-                                }}
-                            />
-                    }
-                    {this.props.textZones ?
+                        />
+                    ) : this.props.imageUrl ? (
+                        <img
+                            src={this.props.imageUrl}
+                            style={{
+                                width: scaledWidth + "px",
+                                height: scaledHeight + "px",
+                            }}
+                            alt='djvu_page'
+                        />
+                    ) : (
+                        <LoadingPhrase
+                        // style={{
+                        //     fontSize: Math.min(scaledWidth * 0.1, scaledHeight * 0.1) + 'px',
+                        //     whiteSpace: 'nowrap',
+                        // }}
+                        />
+                    )}
+                    {this.props.textZones ? (
                         <TextLayer
                             textZones={this.props.textZones}
                             imageHeight={initialHeight}
                             imageWidth={initialWidth}
                             imageDpi={this.props.imageDpi}
                             userScale={this.props.userScale}
-                        /> : null}
-                </div>
-            </Root>
+                        />
+                    ) : null}
+                </>
+            );
+        };
+
+        const applyRotation = () => {
+            if (this.props.rotation) {
+                return (
+                    <div
+                        style={{
+                            transform: `translateX(-50%) translateY(-50%) rotate(${this.props.rotation}deg)`,
+                        }}
+                    >
+                        {innerBlock()}
+                    </div>
+                );
+            }
+            return <div>{innerBlock()}</div>;
+        };
+
+        return (
+            <div
+                className='complex-image'
+                style={{
+                    width: width + "px",
+                    height: height + "px",
+                }}
+                // $rotation={this.props.rotation}
+                ref={this.props.outerRef}
+            >
+                {applyRotation()}
+            </div>
         );
     }
 }

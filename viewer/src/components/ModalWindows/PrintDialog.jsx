@@ -1,24 +1,23 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import ModalWindow from './ModalWindow';
 import { get } from '../../reducers';
 import { useTranslation } from '../Translation';
-import styled from "styled-components";
+// import styled from "styled-components";
 import { ActionTypes } from "../../constants";
-import { styledInput } from "../cssMixins";
-import { TextButton } from "../StyledPrimitives";
+// import { styledInput } from "../cssMixins";
+// import { TextButton } from "../StyledPrimitives";
 import ProgressBar from "../misc/ProgressBar";
 import { isFirefox } from "../../utils";
 
-const Root = styled.div`
-    padding: 0.5em;
-`;
+// const Root = styled.div`
+//     padding: 0.5em;
+// `;
 
-const Select = styled.select`
-    min-width: 4em;
-    ${styledInput};
-`;
+// const Select = styled.select`
+//     min-width: 4em;
+//     ${styledInput};
+// `;
 
 function renderPageNumberOptions(pagesQuantity) {
     const pages = new Array(pagesQuantity);
@@ -71,16 +70,16 @@ export default () => {
                 */
                 break-after: ${isFirefox ? 'page' : 'auto'};
                 break-inside: avoid;
-                /* 
-                When the print scale is bigger than 100%, there can be a situation when height can be increased, but 
-                width is limited with max-width, so the proportions are distorted. To prevent this we use object-fit.                
+                /*
+                When the print scale is bigger than 100%, there can be a situation when height can be increased, but
+                width is limited with max-width, so the proportions are distorted. To prevent this we use object-fit.
                 */
                 object-fit: contain;
                 box-sizing: border-box;
-                /* 
+                /*
                 It seems like 100vw and 100vh can be used as width and height of the paper sheet in Chrome and Firefox.
                 But in Safari they seem to correspond to the size of the iframe, which is 0, so empty pages are printed.
-                So we use 100% width and height here (and for html and body too) to fit big images to the paper size. 
+                So we use 100% width and height here (and for html and body too) to fit big images to the paper size.
                 */
                 max-width: 100%;
                 max-height: 100%;
@@ -115,7 +114,7 @@ export default () => {
 
     return (
         <ModalWindow onClose={() => dispatch({ type: ActionTypes.CLOSE_PRINT_DIALOG })}>
-            <Root>
+            <div className='print-dialog'>
                 {isPreparing ?
                     <>
                         <div css="text-align: center; margin-bottom: 1em;">
@@ -125,14 +124,14 @@ export default () => {
                         <ProgressBar percentage={printProgress} />
                         {pages ?
                             <iframe
-                                css={`
-                                    width: 0;
-                                    height: 0;
-                                    position: absolute;
-                                    left: 0;
-                                    top: 0;
-                                    opacity: 0;
-                                `}
+                                // css={`
+                                //     width: 0;
+                                //     height: 0;
+                                //     position: absolute;
+                                //     left: 0;
+                                //     top: 0;
+                                //     opacity: 0;
+                                // `}
                                 src="about:blank"
                                 ref={elem => elem && print(elem)}
                             /> : null}
@@ -145,15 +144,16 @@ export default () => {
 
                         <div css="margin: 1em 0; text-align: center">
                             <span css="margin-right: 1em;">{t('From')}</span>
-                            <Select value={from} onChange={e => setFrom(e.target.value)}>
+                            <select value={from} onChange={e => setFrom(e.target.value)}>
                                 {renderPageNumberOptions([pagesQuantity])}
-                            </Select>
+                            </select>
                             <span css="margin: 0 1em">{t('to')}</span>
-                            <Select value={to} onChange={e => setTo(e.target.value)}>
+                            <select value={to} onChange={e => setTo(e.target.value)}>
                                 {renderPageNumberOptions([pagesQuantity])}
-                            </Select>
+                            </select>
                         </div>
-                        <TextButton
+                        <button
+                            className="text-button"
                             css="font-size: 0.8em; margin: 0 auto; display: block"
                             onClick={() => dispatch({
                                 type: ActionTypes.PREPARE_PAGES_FOR_PRINTING,
@@ -161,9 +161,9 @@ export default () => {
                             })}
                         >
                             {t('Prepare pages for printing')}
-                        </TextButton>
+                        </button>
                     </>}
-            </Root>
+            </div>
         </ModalWindow>
     );
 };

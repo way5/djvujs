@@ -47,6 +47,8 @@ export default {
         "Вы можете улучшить перевод тут",
 
     // Initial screen
+    "Nothing to display": "Загрузите файл...",
+    // default style (suspended)
     "#helpButton - learn more about the app":
         "#helpButton - узнать больше о программе",
     "#optionsButton - see the available options":

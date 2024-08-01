@@ -1,33 +1,33 @@
 import React, { useEffect, useRef } from 'react';
 import Constants from '../../constants';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 
-const Root = styled.div`
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    left: 0;
+// const Root = styled.div`
+//     overflow: hidden;
+//     position: absolute;
+//     top: 0;
+//     left: 0;
 
-    & > div:first-child {
-        top: 0;
-        left: 0;
-        position: absolute;
-    }
-`;
+//     & > div:first-child {
+//         top: 0;
+//         left: 0;
+//         position: absolute;
+//     }
+// `;
 
-const TextZone = styled.div`
-    line-height: initial;
-    color: rgba(0, 0, 0, 0);
-    text-align-last: justify;
-    text-align: justify;
-    position: absolute;
-    box-sizing: border-box;
-    font-family: 'Times New Roman', Garamond, Times, serif;
+// const TextZone = styled.div`
+//     line-height: initial;
+//     color: rgba(0, 0, 0, 0);
+//     text-align-last: justify;
+//     text-align: justify;
+//     position: absolute;
+//     box-sizing: border-box;
+//     font-family: 'Times New Roman', Garamond, Times, serif;
 
-    span {
-        white-space: pre;
-    }
-`;
+//     span {
+//         white-space: pre;
+//     }
+// `;
 
 const TextLayer = ({ textZones, imageHeight, imageWidth, userScale, imageDpi }) => {
     const wrapper = useRef(null);
@@ -51,7 +51,8 @@ const TextLayer = ({ textZones, imageHeight, imageWidth, userScale, imageDpi }) 
     const scaledHeight = Math.floor(imageHeight * scaleFactor);
 
     return (
-        <Root
+        <div
+            className='text-layer'
             style={{
                 width: scaledWidth + 'px',
                 height: scaledHeight + 'px'
@@ -68,7 +69,8 @@ const TextLayer = ({ textZones, imageHeight, imageWidth, userScale, imageDpi }) 
                 ref={wrapper}
             >
                 {textZones.map((zone, i) => (
-                    <TextZone
+                    <div
+                        className='text-zone'
                         key={i}
                         style={{
                             left: zone.x + 'px',
@@ -79,10 +81,10 @@ const TextLayer = ({ textZones, imageHeight, imageWidth, userScale, imageDpi }) 
                         }}
                     >
                         <span>{zone.text}</span>
-                    </TextZone>
+                    </div>
                 ))}
             </div>
-        </Root>
+        </div>
     );
 }
 
