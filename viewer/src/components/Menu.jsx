@@ -16,7 +16,6 @@ import CursorModeButtonGroup from "./Toolbar/CursorModeButtonGroup";
 import FullPageViewButton from "./misc/FullPageViewButton";
 import FullscreenButton from "./misc/FullscreenButton";
 
-
 const Menu = ({ isOpened, onClose }) => {
     // const dispatch = useDispatch();
     const t = useTranslation();
@@ -33,7 +32,7 @@ const Menu = ({ isOpened, onClose }) => {
 
     const closeHandler = onClose;
 
-    const DocumentInfo = () => {
+    const DocumentName = () => {
         return (
             <>
                 <div>{t("Document")}:</div>
@@ -44,10 +43,16 @@ const Menu = ({ isOpened, onClose }) => {
                 ) : (
                     <FileBlock fileName={fileName || ""} />
                 )}
+            </>
+        );
+    };
 
-                <div
-                    className='document-controls'
-                >
+    const DocumentInfo = () => {
+        return (
+            <>
+                {hideDocumentInfo ? null : <DocumentName />}
+
+                <div className='document-controls'>
                     {hidePrintButton ? null : (
                         <div
                             className='document-control'
@@ -79,12 +84,6 @@ const Menu = ({ isOpened, onClose }) => {
                                 dispatch(Actions.closeDocumentAction())
                             }
                         >
-                            {/* <ControlButton
-                                    as={CloseButton}
-                                    css={`
-                                        font-size: 1em;
-                                    `}
-                                /> */}
                             <CloseButton className='icon-button' />
                             <span>{t("Close")}</span>
                         </div>
@@ -113,7 +112,12 @@ const Menu = ({ isOpened, onClose }) => {
 
             <div className='content'>
                 <div className='document-wrapper'>
-                    {!hideDocumentInfo ? <DocumentInfo /> : null}
+                    {hideDocumentInfo &&
+                    hideOpenAndCloseButtons &&
+                    hidePrintButton &&
+                    hideSaveButton ? null : (
+                        <DocumentInfo />
+                    )}
 
                     {isMobile ? (
                         <>
