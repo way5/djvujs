@@ -4,7 +4,7 @@
         "make": "npm run install && npm run build",
         "install": "cd library && npm install && cd .. && cd viewer && npm install && cd ..",
         "clean": "git clean -fdX --exclude=!/.*/",
-        "start": "cd ./viewer && npm run start",
+        "watch": "cd ./viewer && npm run start",
         "build": "cd library && npm run build && cd .. && cd viewer && npm run build && cd .. && npm run copy",
         "copy": "node build.js copy",
         "remake": "npm run clean && npm run install && npm run build",

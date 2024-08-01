@@ -270,7 +270,7 @@ const Menu = ({ isOpened, onClose }) => {
                 </div>
 
                 <div className='menu-wrapper'>
-                    {!hideFullPageSwitch ? (
+                    {isMobile && !hideFullPageSwitch ? (
                         <div className='mobile-control'>
                             <span>{t("Full page mode")}:</span>
                             <FullPageViewButton />

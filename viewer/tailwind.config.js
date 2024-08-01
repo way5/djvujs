@@ -5,6 +5,7 @@ import forms from '@tailwindcss/forms';
 export default {
     darkMode: "selector",
     mode: "jit",
+    important: true,
     content: [
         "./index.html",
         "./src/**/*.{js,ts,jsx,tsx}",

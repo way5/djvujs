@@ -4,7 +4,11 @@
 
 </p>
 
-This is fork of an oficial repository of [RussCoder/djvujs](https://github.com/RussCoder/djvujs); yet updated, optimized and powered by [tailwindcss](https://github.com/tailwindlabs/tailwindcss).
+![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fway5%2Fdjvujs%2Fmain%2Fviewer%2Fpackage.json&query=%24.version&label=viewer)
+![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fway5%2Fdjvujs%2Fmain%2Flibrary%2Fpackage.json&query=%24.version&label=library&color=%23F86071)
+
+
+This is fork of the oficial repository of [RussCoder/djvujs](https://github.com/RussCoder/djvujs); yet updated, optimized and powered by [tailwindcss](https://github.com/tailwindlabs/tailwindcss).
 
 ## Table of Contents
 

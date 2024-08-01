@@ -1,3 +1,7 @@
+/**
+React icons: https://react-icons.github.io/react-icons/search
+**/
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -152,7 +156,9 @@ ELEMENTS
     }
 
     &.full-page-view {
-        @apply top-0 left-0 fixed w-full h-full z-10;
+        @apply top-0 left-0 fixed w-full h-full z-[1000];
+        /* just in case if the root container has transparent bg */
+        @extend .background-color;
     }
 
     .language-selector {
@@ -493,7 +499,7 @@ ELEMENTS
                 margin-left 0.3s,
                 width 0.3s;
             @extend .border-color;
-            @extend .background-color;
+            /* @extend .background-color; */
 
             &.mobile {
                 @apply absolute z-10 top-0 left-0 h-full w-[100%];

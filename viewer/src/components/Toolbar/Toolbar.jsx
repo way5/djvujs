@@ -112,12 +112,11 @@ export default () => {
     } = useSelector(get.uiOptions);
 
     const menuIsEmpty =
-        hideOpenAndCloseButtons &&
-        hidePrintButton &&
-        hideSaveButton &&
         hideFullPageSwitch &&
         hideFullScreenSwithch &&
-        hideDocumentInfo;
+        (hideDocumentInfo ||
+            (hideSaveButton && hideOpenAndCloseButtons && hidePrintButton)) &&
+        !isMobile;
 
     return (
         <>
@@ -148,12 +147,11 @@ export default () => {
                     {isMobile ? null : <ScaleGizmo />}
                     {isMobile ? null : <RotationControl />}
                 </div>
-                <div className='right-panel'
-                    data-djvujs-class='right_panel'>
+                <div className='right-panel' data-djvujs-class='right_panel'>
                     {isMobile ? null : (
                         <PinButton isPinned={pinned} onClick={handlePin} />
                     )}
-                    {isMobile ? null : <FullPageViewButton />}
+                    {isMobile || hideFullPageSwitch ? null : <FullPageViewButton />}
                     {isMobile ? (
                         <HideButton
                             onClick={() => setManuallyHidden(!manuallyHidden)}
@@ -165,7 +163,6 @@ export default () => {
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                         />
                     )}
-                    ;
                 </div>
                 {menuIsEmpty ? null : (
                     <Menu
@@ -173,7 +170,6 @@ export default () => {
                         onClose={() => setIsMenuOpen(false)}
                     />
                 )}
-                ;
             </div>
         </>
     );
