@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-import Constants from '../../constants';
+import Constants from "../../constants";
 
 /**
  * A component containing logic of rendering ImageData on canvas element.
@@ -10,18 +10,17 @@ import Constants from '../../constants';
  * Must be used with a unique key for each page.
  */
 export default class CanvasImage extends React.Component {
-
     static propTypes = {
         imageData: PropTypes.object.isRequired,
         imageDpi: PropTypes.number.isRequired,
-        userScale: PropTypes.number.isRequired
+        userScale: PropTypes.number.isRequired,
     };
 
     constructor(props) {
         super(props);
-        this.tmpCanvas = document.createElement('canvas');
-        this.tmpCanvasCtx = this.tmpCanvas.getContext('2d', {
-            willReadFrequently: true
+        this.tmpCanvas = document.createElement("canvas");
+        this.tmpCanvasCtx = this.tmpCanvas.getContext("2d", {
+            willReadFrequently: true,
         });
         this.lastUserScale = null;
         this.redrawImageTimeout = -1;
@@ -40,7 +39,11 @@ export default class CanvasImage extends React.Component {
     }
 
     getScaleFactor() {
-        return (this.props.imageDpi ? this.props.imageDpi / Constants.DEFAULT_DPI : 1) / this.props.userScale;
+        return (
+            (this.props.imageDpi
+                ? this.props.imageDpi / Constants.DEFAULT_DPI
+                : 1) / this.props.userScale
+        );
     }
 
     getScaledImageWidth() {
@@ -56,7 +59,8 @@ export default class CanvasImage extends React.Component {
             return;
         }
         if (this.lastUserScale !== this.props.userScale) {
-            if (this.lastUserScale === null) { // if there is no image at all
+            if (this.lastUserScale === null) {
+                // if there is no image at all
                 return this.drawImageOnCanvas();
             }
             clearTimeout(this.redrawImageTimeout);
@@ -84,12 +88,27 @@ export default class CanvasImage extends React.Component {
             scale /= divisor;
             tmpH2 /= divisor;
             tmpW2 /= divisor;
-            this.tmpCanvasCtx.drawImage(this.tmpCanvas, 0, 0, tmpW, tmpH, 0, 0, tmpW2, tmpH2);
+            this.tmpCanvasCtx.drawImage(
+                this.tmpCanvas,
+                0,
+                0,
+                tmpW,
+                tmpH,
+                0,
+                0,
+                tmpW2,
+                tmpH2
+            );
             tmpH = tmpH2;
             tmpW = tmpW2;
         }
 
-        const newImageData = this.tmpCanvasCtx.getImageData(0, 0, Math.max(tmpW, 1), Math.max(tmpH, 1));
+        const newImageData = this.tmpCanvasCtx.getImageData(
+            0,
+            0,
+            Math.max(tmpW, 1),
+            Math.max(tmpH, 1)
+        );
         this.tmpCanvas.width = this.tmpCanvas.height = 0;
         return newImageData;
     }
@@ -107,23 +126,27 @@ export default class CanvasImage extends React.Component {
         this.canvas.height = imageData.height;
         this.canvasCtx.putImageData(imageData, 0, 0);
 
-        if (this.getScaleFactor() >= 1) { // if it's not scaled only with css
-            this.canvas.style.width = imageData.width + 'px'; // just in case, since there may be a rounding error
-            this.canvas.style.height = imageData.height + 'px';
+        if (this.getScaleFactor() >= 1) {
+            // if it's not scaled only with css
+            this.canvas.style.width = imageData.width + "px"; // just in case, since there may be a rounding error
+            this.canvas.style.height = imageData.height + "px";
         }
     }
 
     canvasRef = (node) => {
         this.canvas = node;
         if (this.canvas) {
-            this.canvasCtx = this.canvas.getContext('2d');
+            this.canvasCtx = this.canvas.getContext("2d");
         }
     };
 
     render() {
         return (
             <canvas
-                style={{ width: this.getScaledImageWidth(), height: this.getScaledImageHeight() }}
+                style={{
+                    width: this.getScaledImageWidth(),
+                    height: this.getScaledImageHeight(),
+                }}
                 ref={this.canvasRef}
             />
         );

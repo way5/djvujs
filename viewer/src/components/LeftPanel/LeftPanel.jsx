@@ -2,58 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import ContentsPanel from "./ContentsPanel";
 import { get } from "../../reducers";
-// import styled, { css } from 'styled-components';
 import { ActionTypes } from "../../constants";
 import { AppContext } from "../AppContext";
-// import { DarkLayer } from "../ModalWindows/ModalWindow";
 
+// TODO:
 const closeWidth = 40;
-
-// const mobileStyle = css`
-//     position: absolute;
-//     z-index: 1;
-//     height: 100%;
-//     background: var(--background-color);
-//     max-width: 90%;
-// `;
-
-// const Root = styled.div`
-//     flex: 0 0 auto;
-//     border: 1px solid var(--border-color);
-//     border-radius: 1em 0 1em 0;
-//     box-sizing: border-box;
-//     max-width: 80%;
-//     transition: margin-left 0.5s, width 0.5s;
-//     font-size: 14px;
-
-//     ${p => p.theme.isMobile ? mobileStyle : ''};
-// `;
-
-// const Border = styled.div`
-//     box-sizing: border-box;
-//     float: right;
-//     height: 100%;
-//     position: relative;
-//     width: 7px;
-//     left: 4px;
-//     display: flex;
-//     flex-direction: column;
-//     justify-content: center;
-//     align-items: center;
-//     --point-size: 5px;
-
-//     div {
-//         width: var(--point-size);
-//         height: var(--point-size);
-//         transform: scaleX(0.75) scaleY(1.25) rotateZ(45deg);
-//         background: var(--border-color);
-//         margin-bottom: var(--point-size);
-//     }
-
-//     &:hover {
-//         cursor: col-resize;
-//     }
-// `;
 
 class LeftPanel extends React.Component {
     static contextType = AppContext;
@@ -123,43 +76,19 @@ class LeftPanel extends React.Component {
         const firstRender = contents && this.lastContents !== contents;
         this.lastContents = contents;
 
-        // const currentWidth = this.topNode
-        //     ? this.topNode.getBoundingClientRect().width
-        //     : 0;
-        // const getCloseShift = (width) =>
-        //     `calc(-${width}px - var(--app-padding))`;
-
-        // const initialWidth = isMobile ? "70%" : "20%";
-
         return (
             <>
                 {isMobile && isContentsOpened ? (
-                    <div
-                        className='dark-layer'
-                        onClick={this.closeContents} />
+                    <div className='dark-layer' onClick={this.closeContents} />
                 ) : null}
                 <div
                     className={
-                        'left-panel'
-                        + (isMobile ? ' mobile' : '')
-                        + (
-                            isContentsOpened && !(isMobile && firstRender) ?
-                                (' open' + (firstRender ? ' fast-emerge' : ''))
-                                    : ' closed'
-                        )
+                        "left-panel" +
+                        (isMobile ? " mobile" : "") +
+                        (isContentsOpened && !(isMobile && firstRender)
+                            ? " open" + (firstRender ? " fast-emerge" : "")
+                            : " closed")
                     }
-                    // style={
-                    //     isContentsOpened && !(isMobile && firstRender)
-                    //         ? {
-                    //               width: initialWidth,
-                    //               marginLeft: 0,
-                    //               transition: firstRender ? "none" : null,
-                    //           }
-                    //         : {
-                    //               width: currentWidth,
-                    //               marginLeft: getCloseShift(currentWidth),
-                    //           }
-                    // }
                     ref={this.ref}
                     onTransitionEnd={(e) => {
                         if (
@@ -167,28 +96,22 @@ class LeftPanel extends React.Component {
                             !isContentsOpened
                         ) {
                             this.topNode.style = null;
-                            this.topNode.classList.add = 'open';
-                            this.topNode.classList.remove = 'closed';
-                            // this.topNode.style.width = initialWidth;
-                            // this.topNode.style.marginLeft = `calc(-${initialWidth} - var(--app-padding))`;
-                            // this.topNode.style.transition = `none`;
+                            this.topNode.classList.add = "open";
+                            this.topNode.classList.remove = "closed";
                         }
                     }}
                 >
-                        <div
-                            className="contents-panel-wrapper"
-                            // style={{ height: "100%", overflow: "hidden" }}
-                        >
-                            <ContentsPanel contents={contents} />
-                        </div>
-                        <div
-                            className='page-border'
-                            onMouseDown={this.onBeginResizing}
-                        >
-                            <div />
-                            <div />
-                            <div />
-                        </div>
+                    <div className='contents-panel-wrapper'>
+                        <ContentsPanel contents={contents} />
+                    </div>
+                    <div
+                        className='page-border'
+                        onMouseDown={this.onBeginResizing}
+                    >
+                        <div />
+                        <div />
+                        <div />
+                    </div>
                 </div>
             </>
         );

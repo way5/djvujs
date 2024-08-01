@@ -1,30 +1,12 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-// import styled from 'styled-components';
-import { get } from '../reducers';
-import Constants from '../constants';
-import LeftPanel from './LeftPanel/LeftPanel';
-import LoadingLayer from './LoadingLayer';
-import ImageBlock from './ImageBlock/ImageBlock';
-import TextBlock from './TextBlock';
-import ErrorPage from './ErrorPage';
-
-// const Root = styled.div`
-//     position: relative;
-//     flex: 1 1 auto;
-//     width: 100%;
-//     height: 100%;
-//     display: flex;
-//     box-sizing: border-box;
-//     overflow: hidden;
-// `;
-
-// const PageZone = styled.div`
-//     flex: 1 1 auto;
-//     overflow: hidden;
-//     position: relative;
-//     padding: 0.5em;
-// `;
+import React from "react";
+import { useSelector } from "react-redux";
+import { get } from "../reducers";
+import Constants from "../constants";
+import LeftPanel from "./LeftPanel/LeftPanel";
+import LoadingLayer from "./LoadingLayer";
+import ImageBlock from "./ImageBlock/ImageBlock";
+import TextBlock from "./TextBlock";
+import ErrorPage from "./ErrorPage";
 
 export default () => {
     const viewMode = useSelector(get.viewMode);
@@ -53,12 +35,14 @@ export default () => {
     };
 
     return (
-        <div className="djvujs-viewer-container">
+        <div className='djvujs-viewer-container'>
             <LeftPanel />
-            <div className="djvujs-viewer-page">
+            <div className='djvujs-viewer-page'>
                 {renderMainElement()}
-                {(isLoading && viewMode === Constants.SINGLE_PAGE_MODE) ? <LoadingLayer /> : null}
+                {isLoading && viewMode === Constants.SINGLE_PAGE_MODE ? (
+                    <LoadingLayer />
+                ) : null}
             </div>
         </div>
     );
-}
+};

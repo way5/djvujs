@@ -4,9 +4,7 @@
  * A page in the format of ImageData may take about 30 MB of RAM,
  * so it's not good to cache more than 3.
  */
-
 import { fork } from 'redux-saga/effects';
-//import { delay } from 'redux-saga';
 
 export default class PagesCache {
 

@@ -4,32 +4,9 @@ import { connect } from "react-redux";
 import Actions from "../../actions/actions";
 import TreeItem from "./TreeItem";
 import { TranslationContext } from "../Translation";
-// import styled from 'styled-components';
 import CloseButton from "../misc/CloseButton";
 import { ActionTypes } from "../../constants";
-// import { withAppContext } from "../AppContext";
-
-// const Root = styled.div`
-//     padding: 0.5em;
-//     box-sizing: border-box;
-//     height: 100%;
-//     overflow: auto;
-// `;
-
-// const Header = styled.div`
-//     font-size: 1.5em;
-//     border-bottom: 1px solid var(--border-color);
-//     margin-bottom: 0.5em;
-//     padding-bottom: 0.2em;
-//     display: flex;
-//     justify-content: space-between;
-
-//     span:first-child {
-//         margin-right: 0.5em;
-//         overflow: hidden;
-//         text-overflow: ellipsis;
-//     }
-// `;
+import { withAppContext } from "../AppContext";
 
 class ContentsPanel extends React.Component {
     static propTypes = {
@@ -74,9 +51,7 @@ class ContentsPanel extends React.Component {
                 return (
                     <TreeItem
                         key={i}
-                        {...this.makeTreeItemDataByBookmark(
-                            bookmark
-                        )}
+                        {...this.makeTreeItemDataByBookmark(bookmark)}
                     />
                 );
             });
@@ -105,9 +80,6 @@ class ContentsPanel extends React.Component {
                 {contents ? null : (
                     <div
                         className='no-content'
-                        // css={`
-                        //     font-style: italic;
-                        // `}
                     >
                         {t("No contents provided")}
                     </div>
@@ -117,5 +89,4 @@ class ContentsPanel extends React.Component {
     }
 }
 
-export default connect()(ContentsPanel);
-// export default connect()(withAppContext(ContentsPanel));
+export default connect()(withAppContext(ContentsPanel));

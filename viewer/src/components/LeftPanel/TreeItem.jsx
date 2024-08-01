@@ -1,35 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 import { FaRegPlusSquare, FaRegMinusSquare, FaCircle } from "react-icons/fa";
-// import styled from 'styled-components';
-
-// const Name = styled.div`
-//     cursor: pointer;
-//     margin-left: 0.5em;
-//     line-height: 20px;
-
-//     &:hover {
-//         text-decoration: underline;
-//     }
-// `;
-
-// const Root = styled.div`
-//     display: flex;
-//     flex-wrap: nowrap;
-
-//     & > svg {
-//         flex: 0 0 auto;
-//         font-size: 20px;
-//     }
-// `;
 
 export default class TreeItem extends React.Component {
-
     static propTypes = {
         name: PropTypes.string.isRequired,
         children: PropTypes.array,
         callback: PropTypes.func,
-        callbackData: PropTypes.any
+        callbackData: PropTypes.any,
     };
 
     constructor(props) {
@@ -46,9 +24,13 @@ export default class TreeItem extends React.Component {
             return null;
         }
         return (
-            <div css={`padding-left: 0.5em;`}>
+            <div
+                css={`
+                    padding-left: 0.5em;
+                `}
+            >
                 {this.props.children.map((treeItem, i) => {
-                    return <TreeItem key={i} {...treeItem} />
+                    return <TreeItem key={i} {...treeItem} />;
                 })}
             </div>
         );
@@ -59,19 +41,22 @@ export default class TreeItem extends React.Component {
     };
 
     render() {
-        const Icon = this.state.isCollapsed ? FaRegPlusSquare : FaRegMinusSquare
+        const Icon = this.state.isCollapsed
+            ? FaRegPlusSquare
+            : FaRegMinusSquare;
         return (
             <div className='tree'>
-                {this.props.children ?
-                    <Icon
-                        onClick={this.toggleItem}
-                    /> : <FaCircle css={`transform: scale(0.5)`} />
-                }
+                {this.props.children ? (
+                    <Icon onClick={this.toggleItem} />
+                ) : (
+                    <FaCircle
+                        css={`
+                            transform: scale(0.5);
+                        `}
+                    />
+                )}
                 <div>
-                    <div
-                        className="name"
-                        onClick={this.onClick}
-                    >
+                    <div className='name' onClick={this.onClick}>
                         {this.props.name}
                     </div>
                     {this.state.isCollapsed ? null : this.renderChildren()}

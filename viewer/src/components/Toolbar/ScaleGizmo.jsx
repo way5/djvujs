@@ -1,34 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import Actions from '../../actions/actions';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import Actions from "../../actions/actions";
 import { FaPlus, FaMinus } from "react-icons/fa";
-import { get } from '../../reducers';
+import { get } from "../../reducers";
 import { TranslationContext } from "../Translation";
-// import styled from 'styled-components';
-// import { iconButton, styledInput } from '../cssMixins';
-
-// const Root = styled.span`
-//     display: inline-flex;
-//     flex-wrap: nowrap;
-//     align-items: center;
-//     justify-content: center;
-
-//     svg {
-//         ${iconButton};
-//         font-size: calc(var(--button-basic-size) * 0.8);
-//     }
-
-//     input {
-//         ${styledInput};
-//         display: inline-block;
-//         width: 3em;
-//         margin: 0 0.5em;
-//     }
-// `;
 
 class ScaleGizmo extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = { tempValue: null };
@@ -36,20 +14,22 @@ class ScaleGizmo extends React.Component {
 
     static propTypes = {
         scale: PropTypes.number.isRequired,
-        setUserScale: PropTypes.func.isRequired
+        setUserScale: PropTypes.func.isRequired,
     };
 
     static contextType = TranslationContext;
 
     increaseScale = (e) => {
         e.preventDefault();
-        var newScale = Math.floor((Math.round(this.props.scale * 100) + 10) / 10) / 10;
+        var newScale =
+            Math.floor((Math.round(this.props.scale * 100) + 10) / 10) / 10;
         this.props.setUserScale(newScale);
     };
 
     decreaseScale = (e) => {
         e.preventDefault();
-        var newScale = Math.floor((Math.round(this.props.scale * 100) - 10) / 10) / 10;
+        var newScale =
+            Math.floor((Math.round(this.props.scale * 100) - 10) / 10) / 10;
         this.props.setUserScale(newScale);
     };
 
@@ -67,13 +47,13 @@ class ScaleGizmo extends React.Component {
     };
 
     onKeyPress = (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === "Enter") {
             this.finishEditing(e);
         }
     };
 
     onChange = (e) => {
-        this.setState({ tempValue: e.target.value })
+        this.setState({ tempValue: e.target.value });
     };
 
     render() {
@@ -84,15 +64,19 @@ class ScaleGizmo extends React.Component {
             <div
                 className='scale-gizmo'
                 title={t("You also can scale the page via Ctrl+MouseWheel")}
-                data-djvujs-id="scale_gizmo"
+                data-djvujs-id='scale_gizmo'
             >
                 <FaMinus onClick={this.decreaseScale} />
                 <input
                     onFocus={this.startEditing}
                     onKeyPress={this.onKeyPress}
                     onBlur={this.finishEditing}
-                    type="text"
-                    value={this.state.tempValue === null ? currentValue + '%' : this.state.tempValue}
+                    type='text'
+                    value={
+                        this.state.tempValue === null
+                            ? currentValue + "%"
+                            : this.state.tempValue
+                    }
                     onChange={this.onChange}
                 />
                 <FaPlus onClick={this.increaseScale} />
@@ -101,10 +85,13 @@ class ScaleGizmo extends React.Component {
     }
 }
 
-export default connect(state => {
-    return {
-        scale: get.userScale(state),
-    };
-}, {
-    setUserScale: Actions.setUserScaleAction
-})(ScaleGizmo);
+export default connect(
+    (state) => {
+        return {
+            scale: get.userScale(state),
+        };
+    },
+    {
+        setUserScale: Actions.setUserScaleAction,
+    }
+)(ScaleGizmo);

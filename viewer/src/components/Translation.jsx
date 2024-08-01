@@ -1,9 +1,11 @@
-import React from 'react';
+import React from "react";
 import { useSelector } from "react-redux";
 import { get } from "../reducers";
-import dictionaries from '../locales';
+import dictionaries from "../locales";
 
-export const TranslationContext = React.createContext((text, insertions = null) => text);
+export const TranslationContext = React.createContext(
+    (text, insertions = null) => text
+);
 
 export const TranslationProvider = ({ children }) => {
     const dict = useSelector(get.dictionary);
@@ -20,7 +22,7 @@ export const useTranslation = () => {
 };
 
 const escapingRegex = /[.*+\-?^${}()|[\]\\]/g;
-const escapeRegExp = (string) => string.replace(escapingRegex, '\\$&');
+const escapeRegExp = (string) => string.replace(escapingRegex, "\\$&");
 const untranslatedPhrases = {};
 let warningTimeout = 0;
 
@@ -32,22 +34,33 @@ export function createTranslator(dict) {
             untranslatedPhrases[text] = "";
             clearTimeout(warningTimeout);
             warningTimeout = setTimeout(() => {
-                console.warn(`\nThere are untranslated phrases (missing from the English dictionary):`);
-                console.warn('\n' + JSON.stringify(untranslatedPhrases, null, 2)
-                    .replaceAll('""', '\n      ""'));
+                console.warn(
+                    `\nThere are untranslated phrases (missing from the English dictionary):`
+                );
+                console.warn(
+                    "\n" +
+                        JSON.stringify(untranslatedPhrases, null, 2).replaceAll(
+                            '""',
+                            '\n      ""'
+                        )
+                );
             }, 1000); // timeout to collect many phrases to show them as JSON
         }
 
         if (!insertions) return translatedText;
 
-        const st = Object.keys(insertions).map(escapeRegExp).join('|');
-        const regex = new RegExp(`(${st})`, 'g');
+        const st = Object.keys(insertions).map(escapeRegExp).join("|");
+        const regex = new RegExp(`(${st})`, "g");
 
         const textParts = translatedText.split(regex);
 
-        const textWithInsertions = textParts.map(entry => {
+        const textWithInsertions = textParts.map((entry) => {
             if (entry in insertions) {
-                return <React.Fragment key={entry}>{insertions[entry]}</React.Fragment>;
+                return (
+                    <React.Fragment key={entry}>
+                        {insertions[entry]}
+                    </React.Fragment>
+                );
             } else {
                 return entry;
             }

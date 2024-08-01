@@ -1,18 +1,9 @@
-// import { IoListCircleSharp, IoListCircleOutline } from "react-icons/io5";
 import { FaList, FaListAlt } from "react-icons/fa";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ActionTypes } from "../../constants";
-// import { iconButton } from "../cssMixins";
 import { get } from "../../reducers";
-// import styled from "styled-components";
 import { useTranslation } from "../Translation";
-
-// const Root = styled.svg`
-//     ${iconButton};
-//     font-size: 2em;
-//     flex: 0 0 auto;
-// `;
 
 export default () => {
     const dispatch = useDispatch();
@@ -24,10 +15,9 @@ export default () => {
     return (
         <ContensButtonElement
             className='contents-button'
-            // as={isOpened ? IoListCircleSharp : IoListCircleOutline}
             onClick={() => dispatch({ type: ActionTypes.TOGGLE_CONTENTS })}
-            data-djvujs-id="contents_button"
+            data-djvujs-id='contents_button'
             title={t("Table of contents")}
         />
     );
-}
+};

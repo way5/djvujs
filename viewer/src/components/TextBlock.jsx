@@ -1,35 +1,18 @@
-import React from 'react';
-// import styled from 'styled-components';
-import LoadingPhrase from './misc/LoadingPhrase';
-import { useTranslation } from './Translation';
-
-// const Root = styled.div`
-//     overflow: auto;
-//     max-height: 100%;
-//     padding: 0.5em;
-//     box-sizing: border-box;
-
-//     pre {
-//         width: fit-content;
-//         margin: auto;
-//         background: inherit;
-//         border: 1px solid var(--border-color);
-//         padding: 0.5em;
-//         white-space: pre-wrap;
-//     } 
-// `;
+import React from "react";
+import LoadingPhrase from "./misc/LoadingPhrase";
+import { useTranslation } from "./Translation";
 
 export default ({ text }) => {
     const t = useTranslation();
 
     return (
-        <div
-            className='text-block'
-        >
+        <div className='text-block'>
             <pre>
-                {text === null ?
-                    <LoadingPhrase /> :
-                    text || <em>{t("No text on this page")}</em>}
+                {text === null ? (
+                    <LoadingPhrase />
+                ) : (
+                    text || <em>{t("No text on this page")}</em>
+                )}
             </pre>
         </div>
     );

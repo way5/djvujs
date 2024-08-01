@@ -1,7 +1,5 @@
 import React from "react";
-// import { ControlButton, ControlButtonWrapper } from "../StyledPrimitives";
 import { FaDownload } from "react-icons/fa";
-// import SaveNotification from "./SaveNotification";
 import { useDispatch, useSelector } from "react-redux";
 import { get } from "../../reducers";
 import Actions from "../../actions/actions";
@@ -17,7 +15,10 @@ export default ({ withLabel = false, onClick = () => {}, className = "" }) => {
     return (
         <>
             <span
-                className={'control-button-wrapper' + (className ? ' ' + className : '')}
+                className={
+                    "control-button-wrapper" +
+                    (className ? " " + className : "")
+                }
                 title={t("Save document")}
                 onClick={() => {
                     if (onSaveNotification && onSaveNotification.text) {
@@ -28,7 +29,6 @@ export default ({ withLabel = false, onClick = () => {}, className = "" }) => {
                     onClick();
                 }}
             >
-                {/* <ControlButton as={FaDownload} /> */}
                 <FaDownload className='icon-button' />
                 {withLabel ? <span>{t("Save")}</span> : null}
             </span>

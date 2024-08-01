@@ -1,28 +1,20 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import ModalWindow from './ModalWindow';
-import { get } from '../../reducers';
-import { useTranslation } from '../Translation';
-// import styled from "styled-components";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import ModalWindow from "./ModalWindow";
+import { get } from "../../reducers";
+import { useTranslation } from "../Translation";
 import { ActionTypes } from "../../constants";
-// import { styledInput } from "../cssMixins";
-// import { TextButton } from "../StyledPrimitives";
 import ProgressBar from "../misc/ProgressBar";
 import { isFirefox } from "../../utils";
-
-// const Root = styled.div`
-//     padding: 0.5em;
-// `;
-
-// const Select = styled.select`
-//     min-width: 4em;
-//     ${styledInput};
-// `;
 
 function renderPageNumberOptions(pagesQuantity) {
     const pages = new Array(pagesQuantity);
     for (let i = 1; i <= pagesQuantity; i++) {
-        pages[i - 1] = <option value={i} key={i}>{i}</option>;
+        pages[i - 1] = (
+            <option value={i} key={i}>
+                {i}
+            </option>
+        );
     }
     return pages;
 }
@@ -47,11 +39,14 @@ export default () => {
             // So it can be cured only via closing the tab and opening a new one.
             // In Chrome everything is OK.
             // Actually, 0 timeout works for Firefox too, but to make it more robust we use 100 ms.
-            setTimeout(() => {
-                dispatch({ type: ActionTypes.CLOSE_PRINT_DIALOG });
-            }, isFirefox ? 100 : 0);
+            setTimeout(
+                () => {
+                    dispatch({ type: ActionTypes.CLOSE_PRINT_DIALOG });
+                },
+                isFirefox ? 100 : 0
+            );
         };
-        const styleSheet = document.createElement('style');
+        const styleSheet = document.createElement("style");
         // language=css
         styleSheet.innerHTML = `
             html, body {
@@ -68,7 +63,7 @@ export default () => {
                 Firefox ignores "break-inside: avoid" (while Chrome seems to apply it by default)
                 so we have to use break-after.
                 */
-                break-after: ${isFirefox ? 'page' : 'auto'};
+                break-after: ${isFirefox ? "page" : "auto"};
                 break-inside: avoid;
                 /*
                 When the print scale is bigger than 100%, there can be a situation when height can be increased, but
@@ -90,13 +85,13 @@ export default () => {
         const promises = [];
 
         for (const page of pages) {
-            const img = win.document.createElement('img');
-            promises.push(new Promise(resolve => img.onload = resolve));
+            const img = win.document.createElement("img");
+            promises.push(new Promise((resolve) => (img.onload = resolve)));
             img.src = page.url;
             img.width = page.width;
             img.height = page.height;
-            img.style.width = (page.width / page.dpi) + 'in';
-            img.style.height = (page.height / page.dpi) + 'in';
+            img.style.width = page.width / page.dpi + "in";
+            img.style.height = page.height / page.dpi + "in";
 
             win.document.body.appendChild(img);
         }
@@ -113,56 +108,65 @@ export default () => {
     };
 
     return (
-        <ModalWindow onClose={() => dispatch({ type: ActionTypes.CLOSE_PRINT_DIALOG })}>
+        <ModalWindow
+            onClose={() => dispatch({ type: ActionTypes.CLOSE_PRINT_DIALOG })}
+        >
             <div className='print-dialog'>
-                {isPreparing ?
+                {isPreparing ? (
                     <>
-                        <div css="text-align: center; margin-bottom: 1em;">
-                            {t('Preparing pages for printing')}...
-                            <span css="min-width: 3em; display: inline-block">{printProgress}%</span>
+                        <div css='text-align: center; margin-bottom: 1em;'>
+                            {t("Preparing pages for printing")}...
+                            <span css='min-width: 3em; display: inline-block'>
+                                {printProgress}%
+                            </span>
                         </div>
                         <ProgressBar percentage={printProgress} />
-                        {pages ?
+                        {pages ? (
                             <iframe
-                                // css={`
-                                //     width: 0;
-                                //     height: 0;
-                                //     position: absolute;
-                                //     left: 0;
-                                //     top: 0;
-                                //     opacity: 0;
-                                // `}
-                                src="about:blank"
-                                ref={elem => elem && print(elem)}
-                            /> : null}
+                                src='about:blank'
+                                ref={(elem) => elem && print(elem)}
+                            />
+                        ) : null}
                     </>
-                    : <>
+                ) : (
+                    <>
                         <div>
-                            {t('Pages must be rendered before printing.') + ' ' + t('It may take a while.')}
+                            {t("Pages must be rendered before printing.") +
+                                " " +
+                                t("It may take a while.")}
                         </div>
-                        <div>{t('Select the pages you want to print.')}</div>
+                        <div>{t("Select the pages you want to print.")}</div>
 
-                        <div css="margin: 1em 0; text-align: center">
-                            <span css="margin-right: 1em;">{t('From')}</span>
-                            <select value={from} onChange={e => setFrom(e.target.value)}>
+                        <div css='margin: 1em 0; text-align: center'>
+                            <span css='margin-right: 1em;'>{t("From")}</span>
+                            <select
+                                value={from}
+                                onChange={(e) => setFrom(e.target.value)}
+                            >
                                 {renderPageNumberOptions([pagesQuantity])}
                             </select>
-                            <span css="margin: 0 1em">{t('to')}</span>
-                            <select value={to} onChange={e => setTo(e.target.value)}>
+                            <span css='margin: 0 1em'>{t("to")}</span>
+                            <select
+                                value={to}
+                                onChange={(e) => setTo(e.target.value)}
+                            >
                                 {renderPageNumberOptions([pagesQuantity])}
                             </select>
                         </div>
                         <button
-                            className="text-button"
-                            css="font-size: 0.8em; margin: 0 auto; display: block"
-                            onClick={() => dispatch({
-                                type: ActionTypes.PREPARE_PAGES_FOR_PRINTING,
-                                payload: { from, to }
-                            })}
+                            className='text-button'
+                            css='font-size: 0.8em; margin: 0 auto; display: block'
+                            onClick={() =>
+                                dispatch({
+                                    type: ActionTypes.PREPARE_PAGES_FOR_PRINTING,
+                                    payload: { from, to },
+                                })
+                            }
                         >
-                            {t('Prepare pages for printing')}
+                            {t("Prepare pages for printing")}
                         </button>
-                    </>}
+                    </>
+                )}
             </div>
         </ModalWindow>
     );

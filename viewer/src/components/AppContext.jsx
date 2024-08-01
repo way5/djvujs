@@ -1,19 +1,21 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-// import { ThemeContext, ThemeProvider } from "styled-components";
 import { useDispatch } from "react-redux";
 import { ActionTypes } from "../constants";
 
 const widthThreshold = 890;
 const heightThreshold = 569;
-const defaultValue = { appWidth: widthThreshold, appHeight: heightThreshold, isMobile: false };
-// export const AppContext = ThemeContext;
+const defaultValue = {
+    appWidth: widthThreshold,
+    appHeight: heightThreshold,
+    isMobile: false,
+};
 export const AppContext = React.createContext(null);
 export const useAppContext = () => React.useContext(AppContext);
 
-export const withAppContext = Component => props => (
-        <AppContext.Consumer>
-            {appContext => <Component {...props} appContext={appContext} />}
-        </AppContext.Consumer>
+export const withAppContext = (Component) => (props) => (
+    <AppContext.Consumer>
+        {(appContext) => <Component {...props} appContext={appContext} />}
+    </AppContext.Consumer>
 );
 
 function useAppSize(ref) {
@@ -24,14 +26,18 @@ function useAppSize(ref) {
 
         const observer = new ResizeObserver(([entry]) => {
             // maybe it's better to observe borderBox, but in mobile browsers only contentRect is supported now
-            const boxSize = entry.contentBoxSize ? (entry.contentBoxSize[0] || entry.contentBoxSize) : {
-                inlineSize: entry.contentRect.width,
-                blockSize: entry.contentRect.height,
-            };
+            const boxSize = entry.contentBoxSize
+                ? entry.contentBoxSize[0] || entry.contentBoxSize
+                : {
+                      inlineSize: entry.contentRect.width,
+                      blockSize: entry.contentRect.height,
+                  };
             setAppSize({
                 appWidth: boxSize.inlineSize,
                 appHeight: boxSize.blockSize,
-                isMobile: boxSize.blockSize < heightThreshold || boxSize.inlineSize < widthThreshold,
+                isMobile:
+                    boxSize.blockSize < heightThreshold ||
+                    boxSize.inlineSize < widthThreshold,
             });
         });
 
@@ -49,16 +55,22 @@ function useFullscreen(ref) {
         if (!ref.current) return;
 
         const handler = () => {
-            setIsFullscreen(document.fullscreenElement === ref.current || document.webkitFullscreenElement === ref.current);
+            setIsFullscreen(
+                document.fullscreenElement === ref.current ||
+                    document.webkitFullscreenElement === ref.current
+            );
         };
 
-        ref.current.addEventListener('fullscreenchange', handler);
-        ref.current.addEventListener('webkitfullscreenchange', handler);
-
+        ref.current.addEventListener("fullscreenchange", handler);
+        ref.current.addEventListener("webkitfullscreenchange", handler);
     }, [ref.current]);
 
     const toggleFullscreen = async () => {
-        if (!ref.current || !(document.fullscreenEnabled || document.webkitFullscreenEnabled)) return;
+        if (
+            !ref.current ||
+            !(document.fullscreenEnabled || document.webkitFullscreenEnabled)
+        )
+            return;
 
         let promise = null;
         if (!isFullscreen) {
@@ -67,7 +79,10 @@ function useFullscreen(ref) {
             } else if (ref.current.webkitRequestFullScreen) {
                 promise = ref.current.webkitRequestFullScreen();
             }
-        } else if (document.fullscreenElement || document.webkitFullscreenElement) {
+        } else if (
+            document.fullscreenElement ||
+            document.webkitFullscreenElement
+        ) {
             if (document.exitFullscreen) {
                 promise = document.exitFullscreen();
             } else if (document.webkitExitFullscreen) {
@@ -78,7 +93,7 @@ function useFullscreen(ref) {
         try {
             await promise;
         } catch (e) {
-            console.warn('Cannot change fullscreen mode. Error: \n', e);
+            console.warn("Cannot change fullscreen mode. Error: \n", e);
         }
     };
 
@@ -93,14 +108,10 @@ export default ({ AppRoot }) => {
     const appContext = { ...appSize, ...fullscreen };
 
     useEffect(() => {
-        dispatch({ type: ActionTypes.UPDATE_APP_CONTEXT, payload: appContext })
+        dispatch({ type: ActionTypes.UPDATE_APP_CONTEXT, payload: appContext });
     }, [dispatch, appContext]);
 
     const app = useMemo(() => <AppRoot ref={rootRef} />, [rootRef]);
 
-    return (
-        <AppContext.Provider value={appContext}>
-            {app}
-        </AppContext.Provider>
-    );
-}
+    return <AppContext.Provider value={appContext}>{app}</AppContext.Provider>;
+};

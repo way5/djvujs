@@ -7,10 +7,10 @@
  * so it takes only several kilobytes.
  */
 
-import { put, select } from 'redux-saga/effects';
+import { put, select } from "redux-saga/effects";
 import Actions from "../actions/actions";
-import { get } from '../reducers';
-import Constants from '../constants';
+import { get } from "../reducers";
+import Constants from "../constants";
 
 const radius = 20;
 
@@ -30,7 +30,7 @@ export default class ContinuousScrollManager {
         this.lastLoadPageNumber = null;
     }
 
-    * reset() {
+    *reset() {
         yield* this.dropAllPages();
         this._reset(this.djvuWorker, this.pagesCount, this.pageStorage);
     }
@@ -55,7 +55,10 @@ export default class ContinuousScrollManager {
             if (this.leftNumber > 1) {
                 this.leftNumber = Math.max(1, this.leftNumber - unusedLength);
             } else if (this.rightNumber < this.pagesCount) {
-                this.rightNumber = Math.min(this.pagesCount, this.rightNumber + unusedLength);
+                this.rightNumber = Math.min(
+                    this.pagesCount,
+                    this.rightNumber + unusedLength
+                );
             }
         }
     }
@@ -69,18 +72,19 @@ export default class ContinuousScrollManager {
         }
     }
 
-    * dropAllPages() {
+    *dropAllPages() {
         yield put({ type: Constants.DROP_ALL_PAGES_ACTION });
         this.pageStorage.removeAllPages();
     }
 
-    * dropPage(pageNumber) {
+    *dropPage(pageNumber) {
         yield put(Actions.dropPageAction(pageNumber));
         this.pageStorage.removePage(pageNumber);
     }
 
-    * removeObsoletePagesIfRequired() {
-        const excess = this.pageStorage.getAllPageNumbers().length - 2 * radius - 1;
+    *removeObsoletePagesIfRequired() {
+        const excess =
+            this.pageStorage.getAllPageNumbers().length - 2 * radius - 1;
         if (excess > 0) {
             for (let i = 0; i < excess; i++) {
                 yield* this.dropPage(this.obsoletePageNumbers[i]);
@@ -89,37 +93,52 @@ export default class ContinuousScrollManager {
         }
     }
 
-    * loadPageFromLastPromise() {
+    *loadPageFromLastPromise() {
         try {
             const [page, textZones] = yield this.lastLoadPagePromise;
             page.textZones = textZones;
             this.pageStorage.addPage(this.lastLoadPageNumber, page);
-        } finally { // it's executed when the saga is cancelled too, so it won't hang on the "lastLoadPagePromise" if it's cancelled
+        } finally {
+            // it's executed when the saga is cancelled too, so it won't hang on the "lastLoadPagePromise" if it's cancelled
             this.lastLoadPagePromise = null;
             this.lastLoadPageNumber = null;
         }
     }
 
-    * loadPage(pageNumber) {
+    *loadPage(pageNumber) {
         const page = this.pageStorage.getPage(pageNumber);
-        if (!page || !page.hasOwnProperty('textZones')) {
-            this.lastLoadPagePromise = page ? Promise.all([
-                Promise.resolve(page),
-                this.djvuWorker.doc.getPage(pageNumber).getNormalizedTextZones().run(),
-            ]) : this.djvuWorker.run(
-                this.djvuWorker.doc.getPage(pageNumber).createPngObjectUrl(),
-                this.djvuWorker.doc.getPage(pageNumber).getNormalizedTextZones(),
-            );
+        if (!page || !page.hasOwnProperty("textZones")) {
+            this.lastLoadPagePromise = page
+                ? Promise.all([
+                      Promise.resolve(page),
+                      this.djvuWorker.doc
+                          .getPage(pageNumber)
+                          .getNormalizedTextZones()
+                          .run(),
+                  ])
+                : this.djvuWorker.run(
+                      this.djvuWorker.doc
+                          .getPage(pageNumber)
+                          .createPngObjectUrl(),
+                      this.djvuWorker.doc
+                          .getPage(pageNumber)
+                          .getNormalizedTextZones()
+                  );
             this.lastLoadPageNumber = pageNumber;
 
             yield* this.loadPageFromLastPromise();
             yield* this.removeObsoletePagesIfRequired();
         }
 
-        yield put(Actions.pageIsLoadedAction(this.pageStorage.getPage(pageNumber), pageNumber));
+        yield put(
+            Actions.pageIsLoadedAction(
+                this.pageStorage.getPage(pageNumber),
+                pageNumber
+            )
+        );
     }
 
-    * startDataFetching() {
+    *startDataFetching() {
         // the process of loading can't be stopped so it's by all means better
         // to save the page to the registry, even if it will not be used soon
         if (this.lastLoadPagePromise) {
@@ -132,7 +151,10 @@ export default class ContinuousScrollManager {
         this.updateRegistries();
         this.djvuWorker.emptyTaskQueue();
 
-        const span = Math.min(this.pageNumber - this.leftNumber, this.rightNumber - this.pageNumber);
+        const span = Math.min(
+            this.pageNumber - this.leftNumber,
+            this.rightNumber - this.pageNumber
+        );
 
         yield* this.loadPage(this.pageNumber);
 
@@ -141,15 +163,28 @@ export default class ContinuousScrollManager {
             yield* this.loadPage(this.pageNumber - i);
         }
 
-        if (this.pageNumber - this.leftNumber < this.rightNumber - this.pageNumber) { // if we are nearer to the beginning
-            for (let i = this.leftNumber + 2 * span + 1; i <= this.rightNumber; i++) { // load pages in a usual order
+        if (
+            this.pageNumber - this.leftNumber <
+            this.rightNumber - this.pageNumber
+        ) {
+            // if we are nearer to the beginning
+            for (
+                let i = this.leftNumber + 2 * span + 1;
+                i <= this.rightNumber;
+                i++
+            ) {
+                // load pages in a usual order
                 yield* this.loadPage(i);
             }
         } else {
-            for (let i = this.rightNumber - 2 * span - 1; i >= this.leftNumber; i--) { // else load pages in a reversed order
+            for (
+                let i = this.rightNumber - 2 * span - 1;
+                i >= this.leftNumber;
+                i--
+            ) {
+                // else load pages in a reversed order
                 yield* this.loadPage(i);
             }
         }
     }
-
 }

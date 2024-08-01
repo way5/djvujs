@@ -8,53 +8,12 @@ import libPackage from "../../../../library/package.json";
 // import LinkBlock from './LinkBlock';
 import { useTranslation } from "../Translation";
 // import { LanguagePanel } from "../Language/LanguagePanel";
-// import styled from 'styled-components';
 // import ThemeSwitcher from './ThemeSwitcher';
 // import OptionsButton from "../misc/OptionsButton";
 // import FullPageViewButton from "../misc/FullPageViewButton";
 // import { useAppContext } from "../AppContext";
 // import LanguageSelector from "../Language/LanguageSelector";
 // import FullscreenButton from "../misc/FullscreenButton";
-
-// const Root = styled.div`
-//     font-size: ${p => p.theme.isMobile ? 1.5 : 2}em;
-//     text-align: center;
-//     flex: 1 1 auto;
-//     width: 100%;
-//     height: 100%;
-//     overflow: auto;
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-// `;
-
-// const InfoBlock = styled.div`
-//     width: max-content;
-//     margin: 0 auto 1em auto;
-//     text-align: left;
-//     font-size: 0.8em;
-
-//     svg {
-//         font-size: 1.5em;
-//     }
-
-//     div {
-//         display: flex;
-//         align-items: center;
-//         margin-bottom: 0.25em;
-//     }
-// `;
-
-// const Footer = styled.div`
-//     width: 100%;
-//     display: flex;
-//     justify-content: flex-end;
-//     contain: layout;
-
-//     & > * {
-//         margin-left: 0.5em;
-//     }
-// `;
 
 export default () => {
     const t = useTranslation();

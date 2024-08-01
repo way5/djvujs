@@ -1,12 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { thunk } from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
-
 import rootReducer from './reducers';
 import createRootSaga from './sagas/rootSaga';
 import initHotkeys from './hotkeys';
 
-// const configureStore = (eventMiddleware = undefined) => {
 const configure = (eventMiddleware = undefined) => {
     const sagaMiddleware = createSagaMiddleware();
     const Store = configureStore({

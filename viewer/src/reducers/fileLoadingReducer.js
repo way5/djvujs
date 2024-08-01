@@ -1,10 +1,10 @@
-import { createSelector } from 'reselect';
-import Constants, { ActionTypes } from '../constants';
+import { createSelector } from "reselect";
+import Constants, { ActionTypes } from "../constants";
 
 const initialState = Object.freeze({
     isFileLoading: false,
     loadedBytes: 0,
-    totalBytes: 0
+    totalBytes: 0,
 });
 
 export default function fileLoadingReducer(state = initialState, action) {
@@ -13,14 +13,14 @@ export default function fileLoadingReducer(state = initialState, action) {
             return {
                 ...state,
                 isFileLoading: true,
-            }
+            };
 
         case Constants.FILE_LOADING_PROGRESS_ACTION:
             return {
                 ...state,
                 loadedBytes: action.loaded,
-                totalBytes: action.total
-            }
+                totalBytes: action.total,
+            };
 
         case Constants.END_FILE_LOADING_ACTION:
         case ActionTypes.ERROR:
@@ -31,10 +31,11 @@ export default function fileLoadingReducer(state = initialState, action) {
     }
 }
 
-const $ = selector => createSelector(state => state.fileLoadingState, selector);
+const $ = (selector) =>
+    createSelector((state) => state.fileLoadingState, selector);
 
 export const get = {
-    isFileLoading: $(s => s.isFileLoading),
-    loadedBytes: $(s => s.loadedBytes),
-    totalBytes: $(s => s.totalBytes),
+    isFileLoading: $((s) => s.isFileLoading),
+    loadedBytes: $((s) => s.loadedBytes),
+    totalBytes: $((s) => s.totalBytes),
 };

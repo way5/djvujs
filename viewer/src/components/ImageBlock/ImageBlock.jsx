@@ -8,48 +8,6 @@ import Constants from "../../constants";
 import ComplexImage from "./ComplexImage";
 import VirtualList from "./VirtualList";
 import { createDeferredHandler } from "../helpers";
-// import styled, { css } from 'styled-components';
-
-// const grabbingCursor = css`
-//     &.djvujs-grabbing {
-//         cursor: grabbing;
-//     }
-// `;
-
-// const grabCursor = css`
-//     cursor: grab;
-
-//     * {
-//         user-select: none;
-//     }
-// `;
-
-// const sharedStyle = css`
-//     touch-action: pan-x pan-y;
-//     ${p => p.$grab ? grabCursor : ''};
-//     ${grabbingCursor};
-// `;
-
-// const SinglePageModeRoot = styled.div`
-//     flex: 1 1 auto;
-//     display: flex;
-//     flex-direction: column;
-//     width: 100%;
-//     height: 100%;
-//     overflow: auto;
-//     box-sizing: border-box;
-//     padding-bottom: 30px;
-//     ${sharedStyle};
-// `;
-
-// const ContinuousScrollItem = styled.div`
-//     box-sizing: border-box;
-//     min-width: 100%;
-//     padding: 2px 0;
-//     transform: translate3d(0, 0, 0); // just for performance optimization when continuous mode is enabled
-//     display: flex;
-//     justify-content: center;
-// `;
 
 function resetEventListener(node, event, handler, options = undefined) {
     node.removeEventListener(event, handler, options);
@@ -459,8 +417,6 @@ class ImageBlock extends React.Component {
             <VirtualList
                 ref={this.virtualListRef}
                 outerRef={this.wrapperRef}
-                // $grab={isGrabMode}
-                // className={className + (isGrabMode ? "grab-cursor" : "")}
                 itemSizes={this.getItemSizes(
                     pageSizeList,
                     userScale,
@@ -468,27 +424,15 @@ class ImageBlock extends React.Component {
                     pageCountInRow,
                     firstRowPageCount
                 )}
-                //data={pageList}
                 itemRenderer={this.itemRenderer}
                 key={documentId}
             />
         ) : imageData ? (
             <div
-                // css={`
-                //     ${(p) => (p.$grab ? "grab-cursor" : "")}
-                // `}
-                className={'single-page' + (isGrabMode ? ' grab-cursor' : "")}
-                // $grab={isGrabMode}
+                className={"single-page" + (isGrabMode ? " grab-cursor" : "")}
                 ref={this.wrapperRef}
             >
-                <div
-                    ref={this.complexImageRef}
-                    // css={`
-                    //     padding: 1em;
-                    //     margin: auto;
-                    // `}
-                    // style={{ opacity: 0 }} // is changed in the ComponentDidUpdate
-                >
+                <div ref={this.complexImageRef}>
                     <ComplexImage {...this.props} />
                 </div>
             </div>

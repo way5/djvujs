@@ -3,40 +3,8 @@ import PropTypes from "prop-types";
 import CanvasImage from "./CanvasImage";
 import TextLayer from "./TextLayer";
 import Constants from "../../constants";
-// import styled from 'styled-components';
 import LoadingPhrase from "../misc/LoadingPhrase";
 import memoize from "memoize-one";
-
-// const Root = styled.div`
-//     position: relative;
-//     border: 1px solid darkgray;
-//     overflow: hidden;
-
-//     &:first-child {
-//         margin-left: auto;
-//     }
-
-//     &:last-child {
-//         margin-right: auto;
-//     }
-
-//     & > div:first-child {
-//         position: absolute;
-//         left: 50%;
-//         top: 50%;
-//         transform: translateX(-50%) translateY(-50%);
-
-//         img {
-//             display: block;
-//         }
-
-//         & > canvas {
-//             display: block;
-//         }
-
-//         ${p => p.$rotation ? `transform: translateX(-50%) translateY(-50%) rotate(${p.$rotation}deg)` : ''};
-//     }
-// `;
 
 /**
  * A component encapsulating the text layer, the canvas image, and adding additional wrapper to fix the size of the block,
@@ -206,12 +174,7 @@ class ComplexImage extends React.PureComponent {
                             alt='djvu_page'
                         />
                     ) : (
-                        <LoadingPhrase
-                        // style={{
-                        //     fontSize: Math.min(scaledWidth * 0.1, scaledHeight * 0.1) + 'px',
-                        //     whiteSpace: 'nowrap',
-                        // }}
-                        />
+                        <LoadingPhrase />
                     )}
                     {this.props.textZones ? (
                         <TextLayer
@@ -248,7 +211,6 @@ class ComplexImage extends React.PureComponent {
                     width: width + "px",
                     height: height + "px",
                 }}
-                // $rotation={this.props.rotation}
                 ref={this.props.outerRef}
             >
                 {applyRotation()}

@@ -1,21 +1,27 @@
 /**
  * All side-effect logic is here (all logic which isn't related directly to the UI)
  */
-import { parse as parseContentDisposition } from 'content-disposition-header';
-import { put, select, takeLatest, take, cancel, fork } from 'redux-saga/effects';
-import { get } from '../reducers';
-// import { delay } from 'redux-saga';
+import { parse as parseContentDisposition } from "content-disposition-header";
+import {
+    put,
+    select,
+    takeLatest,
+    take,
+    cancel,
+    fork,
+} from "redux-saga/effects";
+import { get } from "../reducers";
 
-import Constants, { ActionTypes } from '../constants';
+import Constants, { ActionTypes } from "../constants";
 import Actions from "../actions/actions";
-import PagesCache from './PagesCache';
-import DjVu from '../DjVu';
-import ContinuousScrollManager from './ContinuousScrollManager';
-import { normalizeFileName, inExtension } from '../utils';
-import { loadFile } from '../utils';
+import PagesCache from "./PagesCache";
+import DjVu from "../DjVu";
+import ContinuousScrollManager from "./ContinuousScrollManager";
+import { normalizeFileName, inExtension } from "../utils";
+import { loadFile } from "../utils";
 import dictionaries from "../locales";
 import { createTranslator } from "../components/Translation";
-import PrintManager from './PrintManager';
+import PrintManager from "./PrintManager";
 import PageStorage from "./PageStorage";
 
 class RootSaga {
@@ -26,7 +32,9 @@ class RootSaga {
         // Firefox's extension moderators asked me not to use "content_security_policy": "script-src blob:" permission,
         // so just for them on the main page of the extension a script url should be provided manually.
         // In all other cases no libURL is required - a blob URL will be generated automatically for the worker.
-        const libURL = inExtension ? document.querySelector('script#djvu_js_lib').src : undefined;
+        const libURL = inExtension
+            ? document.querySelector("script#djvu_js_lib").src
+            : undefined;
         this.djvuWorker = new DjVu.Worker(libURL);
 
         // it's needed to recreate the worker when the bundle() operation is cancelled (but save the document),
@@ -41,33 +49,42 @@ class RootSaga {
         this.continuousScrollManager = null;
     }
 
-    * getImageData() {
+    *getImageData() {
         const state = yield select();
         const currentPageNumber = get.currentPageNumber(state);
         const pagesQuantity = get.pagesQuantity(state);
 
-        const currentPageData = yield* this.pagesCache.fetchCurrentPageByNumber(currentPageNumber, pagesQuantity);
+        const currentPageData = yield* this.pagesCache.fetchCurrentPageByNumber(
+            currentPageNumber,
+            pagesQuantity
+        );
 
         if (currentPageData.error) {
-            yield put({ type: ActionTypes.SET_IMAGE_PAGE_ERROR, payload: currentPageData.error });
+            yield put({
+                type: ActionTypes.SET_IMAGE_PAGE_ERROR,
+                payload: currentPageData.error,
+            });
         } else {
             //console.log('put Consts.IMAGE_DATA_RECEIVED_ACTION');
             yield put({
                 type: Constants.IMAGE_DATA_RECEIVED_ACTION,
                 imageData: currentPageData.imageData,
-                imageDpi: currentPageData.dpi
+                imageDpi: currentPageData.dpi,
             });
         }
     }
 
-    * fetchPageData() {
+    *fetchPageData() {
         const state = yield select();
         const viewMode = get.viewMode(state);
 
         // when an outer config is provided, and the continuous scroll isn't default,
         // the page reset can start this saga before the manager has been crated.
         // Must be fixed at the architectural level, maybe the manager should be created lazily.
-        if (viewMode === Constants.CONTINUOUS_SCROLL_MODE && this.continuousScrollManager) {
+        if (
+            viewMode === Constants.CONTINUOUS_SCROLL_MODE &&
+            this.continuousScrollManager
+        ) {
             yield* this.continuousScrollManager.startDataFetching();
         } else {
             const pageNumber = get.currentPageNumber(state);
@@ -83,25 +100,25 @@ class RootSaga {
         }
     }
 
-    * fetchPageText(pageNumber) {
+    *fetchPageText(pageNumber) {
         try {
             //console.log('text ', pageNumber);
             const [text, textZones] = yield this.djvuWorker.run(
                 this.djvuWorker.doc.getPage(pageNumber).getText(),
-                this.djvuWorker.doc.getPage(pageNumber).getNormalizedTextZones(),
+                this.djvuWorker.doc.getPage(pageNumber).getNormalizedTextZones()
             );
 
             yield put({
                 type: Constants.PAGE_TEXT_FETCHED_ACTION,
                 pageText: text,
-                textZones: textZones
+                textZones: textZones,
             });
         } catch (e) {
             yield put({ type: ActionTypes.SET_TEXT_PAGE_ERROR, payload: e });
         }
     }
 
-    * fetchPageTextIfRequired() {
+    *fetchPageTextIfRequired() {
         const state = yield select();
         const currentPageNumber = get.currentPageNumber(state);
         const pageText = get.pageText(state);
@@ -113,35 +130,60 @@ class RootSaga {
         yield* this.fetchPageText(currentPageNumber);
     }
 
-    * prepareForContinuousMode() {
+    *prepareForContinuousMode() {
         const pagesSizes = yield this.djvuWorker.doc.getPagesSizes().run();
-        this.continuousScrollManager = new ContinuousScrollManager(this.djvuWorker, pagesSizes.length, this.pageStorage);
+        this.continuousScrollManager = new ContinuousScrollManager(
+            this.djvuWorker,
+            pagesSizes.length,
+            this.pageStorage
+        );
         yield put(Actions.pagesSizesAreGottenAction(pagesSizes));
     }
 
-    * configure({ pageNumber, pageRotation, viewMode, pageScale, language, theme, uiOptions }) {
-        if (viewMode) yield put({ type: ActionTypes.SET_VIEW_MODE, payload: viewMode, notSave: true });
-        if (pageNumber) yield put(Actions.setNewPageNumberAction(pageNumber, true));
-        if (pageRotation) yield put(Actions.setPageRotationAction(pageRotation));
+    *configure({
+        pageNumber,
+        pageRotation,
+        viewMode,
+        pageScale,
+        language,
+        theme,
+        uiOptions,
+    }) {
+        if (viewMode)
+            yield put({
+                type: ActionTypes.SET_VIEW_MODE,
+                payload: viewMode,
+                notSave: true,
+            });
+        if (pageNumber)
+            yield put(Actions.setNewPageNumberAction(pageNumber, true));
+        if (pageRotation)
+            yield put(Actions.setPageRotationAction(pageRotation));
         if (pageScale) yield put(Actions.setUserScaleAction(pageScale));
-        if (uiOptions) yield put({
-            type: ActionTypes.SET_UI_OPTIONS,
-            payload: uiOptions,
-        });
+        if (uiOptions)
+            yield put({
+                type: ActionTypes.SET_UI_OPTIONS,
+                payload: uiOptions,
+            });
 
         const options = {};
         if (language) {
             if (language in dictionaries) {
                 options.locale = language;
             } else {
-                console.warn(`DjVu.js Viewer: only ${Object.keys(dictionaries)} languages are available! Got ${language}`);
+                console.warn(
+                    `DjVu.js Viewer: only ${Object.keys(dictionaries)} languages are available! Got ${language}`
+                );
             }
         }
         if (theme) {
-            if (theme === 'dark' || theme === 'light') {
+            if (theme === "dark" || theme === "light") {
                 options.theme = theme;
             } else {
-                console.warn('DjVu.js Viewer: only "dark" or "light" themes are supported! Got ' + theme);
+                console.warn(
+                    'DjVu.js Viewer: only "dark" or "light" themes are supported! Got ' +
+                        theme
+                );
             }
         }
 
@@ -154,17 +196,20 @@ class RootSaga {
         }
     }
 
-    * createDocumentFromArrayBuffer({ arrayBuffer, fileName, config }) {
+    *createDocumentFromArrayBuffer({ arrayBuffer, fileName, config }) {
         this.resetWorkerAndStorages();
 
         this.documentContructorData = {
             buffer: arrayBuffer.slice(0),
             options: config && config.djvuOptions,
         };
-        yield this.djvuWorker.createDocument(arrayBuffer, config && config.djvuOptions);
+        yield this.djvuWorker.createDocument(
+            arrayBuffer,
+            config && config.djvuOptions
+        );
         const [pagesQuantity, isBundled] = yield this.djvuWorker.run(
             this.djvuWorker.doc.getPagesQuantity(),
-            this.djvuWorker.doc.isBundled(),
+            this.djvuWorker.doc.isBundled()
         );
         if (isBundled) {
             this.documentContructorData = null;
@@ -184,7 +229,7 @@ class RootSaga {
             yield* this.prepareForContinuousMode();
         }
 
-        // perhaps it's better to configure the viewer before DOCUMENT_CREATED_ACTION 
+        // perhaps it's better to configure the viewer before DOCUMENT_CREATED_ACTION
         // (since the promise of the viewer.loadDocument is resolved on this action)
         // But currently DOCUMENT_CREATED_ACTION reset the state of the viewer, so the configuration is done after it.
         // The optimal variant is to resolve the promise on another action, but I'm not sure is it needed to anybody at all.
@@ -197,50 +242,66 @@ class RootSaga {
         yield* this.resetCurrentPageNumber();
     }
 
-    * loadContents() {
+    *loadContents() {
         const contents = yield this.djvuWorker.doc.getContents().run();
         yield put({
             type: Constants.CONTENTS_IS_GOTTEN_ACTION,
-            contents: contents
+            contents: contents,
         });
     }
 
-    * resetCurrentPageNumber() {
+    *resetCurrentPageNumber() {
         // set the current number to start page fetching saga
         // fetchPageData shouldn't be called via yield* directly, otherwise it won't be cancelled by takeLatest effect
         const state = yield select();
-        yield put(Actions.setNewPageNumberAction(get.currentPageNumber(state), true)); // set the current number to start page fetching saga
+        yield put(
+            Actions.setNewPageNumberAction(get.currentPageNumber(state), true)
+        ); // set the current number to start page fetching saga
     }
 
-    * setPageByUrl(action) {
+    *setPageByUrl(action) {
         const url = action.url;
-        if (url && url[0] !== '#') { // urls can be empty strings sometimes
+        if (url && url[0] !== "#") {
+            // urls can be empty strings sometimes
             // right now the constructor options are saved for indirect documents only
             const data = this.documentContructorData;
             const baseUrl = data && data.options && data.options.baseUrl;
-            const absoluteUrl = (
-                /^https?:\/\/.+/.test(url) ? url :
-                    baseUrl ? new URL(url, baseUrl).href :
-                        !inExtension ? new URL(url, location.href) : null
-            );
+            const absoluteUrl = /^https?:\/\/.+/.test(url)
+                ? url
+                : baseUrl
+                  ? new URL(url, baseUrl).href
+                  : !inExtension
+                    ? new URL(url, location.href)
+                    : null;
 
             if (absoluteUrl) {
                 if (inExtension) {
-                    chrome.runtime.sendMessage({ command: 'open_viewer_tab', url: absoluteUrl });
+                    chrome.runtime.sendMessage({
+                        command: "open_viewer_tab",
+                        url: absoluteUrl,
+                    });
                 } else {
                     const t = createTranslator(yield select(get.dictionary));
-                    if (confirm(t('The link points to another document. Do you want to proceed?'))) {
+                    if (
+                        confirm(
+                            t(
+                                "The link points to another document. Do you want to proceed?"
+                            )
+                        )
+                    ) {
                         yield put({
                             type: ActionTypes.LOAD_DOCUMENT_BY_URL,
                             url: absoluteUrl,
-                        })
+                        });
                     }
                 }
                 return;
             }
         }
 
-        const pageNumber = yield this.djvuWorker.doc.getPageNumberByUrl(action.url).run();
+        const pageNumber = yield this.djvuWorker.doc
+            .getPageNumberByUrl(action.url)
+            .run();
         if (pageNumber !== null) {
             yield put(Actions.setNewPageNumberAction(pageNumber, true));
             if (action.closeContentsOnSuccess) {
@@ -256,18 +317,18 @@ class RootSaga {
                 const gen = func(action);
                 if (gen && gen.next) yield* gen;
             } catch (error) {
-                yield put(Actions.errorAction(error))
+                yield put(Actions.errorAction(error));
             }
-        }
+        };
     }
 
-    * saveDocument() {
+    *saveDocument() {
         const state = yield select();
         const fileName = get.fileName(state);
 
         if (fileName) {
             const url = yield this.djvuWorker.doc.createObjectURL().run();
-            const a = document.createElement('a');
+            const a = document.createElement("a");
             a.href = url;
             a.download = normalizeFileName(fileName);
             a.dispatchEvent(new MouseEvent("click"));
@@ -288,26 +349,34 @@ class RootSaga {
         this.callbacks[action.callbackName] = action.callback;
     }
 
-    * switchToContinuousScrollMode(notSave = false) {
+    *switchToContinuousScrollMode(notSave = false) {
         this.djvuWorker.cancelAllTasks();
         if (!this.continuousScrollManager) {
             yield* this.prepareForContinuousMode();
         }
         this.pagesCache.resetPagesCache();
         yield* this.resetCurrentPageNumber();
-        if (!notSave) yield put({ type: ActionTypes.UPDATE_OPTIONS, payload: { preferContinuousScroll: true } });
+        if (!notSave)
+            yield put({
+                type: ActionTypes.UPDATE_OPTIONS,
+                payload: { preferContinuousScroll: true },
+            });
     }
 
-    * switchToSinglePageMode(notSave = false) {
+    *switchToSinglePageMode(notSave = false) {
         this.djvuWorker.cancelAllTasks();
         if (this.continuousScrollManager) {
             yield* this.continuousScrollManager.reset();
         }
         yield* this.resetCurrentPageNumber();
-        if (!notSave) yield put({ type: ActionTypes.UPDATE_OPTIONS, payload: { preferContinuousScroll: false } });
+        if (!notSave)
+            yield put({
+                type: ActionTypes.UPDATE_OPTIONS,
+                payload: { preferContinuousScroll: false },
+            });
     }
 
-    * switchToTextMode() {
+    *switchToTextMode() {
         this.djvuWorker.cancelAllTasks();
         if (this.continuousScrollManager) {
             yield* this.continuousScrollManager.reset();
@@ -315,7 +384,7 @@ class RootSaga {
         yield* this.fetchPageTextIfRequired();
     }
 
-    * handleViewModeSwitch({ notSave = false } = {}) {
+    *handleViewModeSwitch({ notSave = false } = {}) {
         const isLoaded = yield select(get.isDocumentLoaded);
         const viewMode = yield select(get.viewMode);
         if (!isLoaded) return;
@@ -328,31 +397,38 @@ class RootSaga {
             case Constants.TEXT_MODE:
                 return yield* this.switchToTextMode();
             default:
-                throw new Error('Invalid view mode: ' + payload);
+                throw new Error("Invalid view mode: " + payload);
         }
     }
 
-    * updateOptions(action) {
+    *updateOptions(action) {
         if (action.notSave) return;
 
         const state = yield select();
         const options = get.options(state);
 
         if (inExtension) {
-            yield new Promise(resolve => window.chrome.storage.local.set({ 'djvu_js_options': JSON.stringify(options) }, resolve));
+            yield new Promise((resolve) =>
+                window.chrome.storage.local.set(
+                    { djvu_js_options: JSON.stringify(options) },
+                    resolve
+                )
+            );
         } else {
-            localStorage.setItem('djvu_js_options', JSON.stringify(options));
+            localStorage.setItem("djvu_js_options", JSON.stringify(options));
         }
     }
 
-    * loadOptions() {
+    *loadOptions() {
         try {
             let options = {};
             if (inExtension) {
-                options = yield new Promise(resolve => window.chrome.storage.local.get('djvu_js_options', resolve));
-                options = options['djvu_js_options'];
+                options = yield new Promise((resolve) =>
+                    window.chrome.storage.local.get("djvu_js_options", resolve)
+                );
+                options = options["djvu_js_options"];
             } else {
-                options = localStorage.getItem('djvu_js_options');
+                options = localStorage.getItem("djvu_js_options");
             }
 
             try {
@@ -378,34 +454,36 @@ class RootSaga {
                     notSave: true,
                 });
             }
-        } catch (e) { }
+        } catch (e) {}
     }
 
-    * loadDocumentByUrl({ url, config }) {
+    *loadDocumentByUrl({ url, config }) {
         config = config || {};
 
         const getFileNameFromUrl = (url) => {
             try {
                 const res = /[^/#]*(?=#|$)/.exec(url.trim());
-                return res ? decodeURIComponent(res[0]) : '***';
+                return res ? decodeURIComponent(res[0]) : "***";
             } catch (e) {
-                return '***';
+                return "***";
             }
         };
 
         try {
-            const a = document.createElement('a');
+            const a = document.createElement("a");
             a.href = url;
             url = a.href; // converting of a relative url to an absolute one
             yield put(Actions.startFileLoadingAction());
 
             const xhr = yield loadFile(url, (e) => {
-                this.dispatch(Actions.fileLoadingProgressAction(e.loaded, e.total));
+                this.dispatch(
+                    Actions.fileLoadingProgressAction(e.loaded, e.total)
+                );
             });
             const { response: buffer, responseURL } = xhr;
 
             // Try to get file name from Content-Disposition header if it's there
-            const cdHeader = xhr.getResponseHeader('Content-Disposition');
+            const cdHeader = xhr.getResponseHeader("Content-Disposition");
             if (cdHeader) {
                 const parsedCd = parseContentDisposition(cdHeader);
                 if (parsedCd.parameters.filename) {
@@ -414,16 +492,25 @@ class RootSaga {
             }
 
             // responseUrl is the URL after all redirects
-            config.djvuOptions = { baseUrl: url.startsWith('data:') ? null : new URL('./', responseURL).href };
+            config.djvuOptions = {
+                baseUrl: url.startsWith("data:")
+                    ? null
+                    : new URL("./", responseURL).href,
+            };
             yield* this.createDocumentFromArrayBuffer({
                 arrayBuffer: buffer,
-                fileName: config.name === undefined ? getFileNameFromUrl(url) : config.name,
-                config: config
+                fileName:
+                    config.name === undefined
+                        ? getFileNameFromUrl(url)
+                        : config.name,
+                config: config,
             });
 
             // now we should process #page=page_number and ?page=page_number
             const urlObject = new URL(url.toLowerCase());
-            const pageNumber = +urlObject.searchParams.get('page') || +new URLSearchParams(urlObject.hash).get('#page');
+            const pageNumber =
+                +urlObject.searchParams.get("page") ||
+                +new URLSearchParams(urlObject.hash).get("#page");
 
             if (pageNumber) {
                 yield put(Actions.setNewPageNumberAction(pageNumber, true));
@@ -435,16 +522,18 @@ class RootSaga {
         }
     }
 
-    * bundleDocument() {
+    *bundleDocument() {
         try {
             this.djvuWorker.cancelAllTasks();
             this.isBundling = true;
-            const buffer = yield this.djvuWorker.doc.bundle(progress => {
-                this.dispatch({
-                    type: ActionTypes.UPDATE_FILE_PROCESSING_PROGRESS,
-                    payload: progress,
-                });
-            }).run();
+            const buffer = yield this.djvuWorker.doc
+                .bundle((progress) => {
+                    this.dispatch({
+                        type: ActionTypes.UPDATE_FILE_PROCESSING_PROGRESS,
+                        payload: progress,
+                    });
+                })
+                .run();
             yield put({
                 type: ActionTypes.FINISH_TO_BUNDLE,
                 payload: buffer,
@@ -454,7 +543,7 @@ class RootSaga {
         }
     }
 
-    * hardReloadIfRequired() {
+    *hardReloadIfRequired() {
         if (this.isBundling && this.documentContructorData) {
             this.djvuWorker.reset();
             this.isBundling = false;
@@ -467,12 +556,16 @@ class RootSaga {
         }
     }
 
-    * preparePagesForPrinting(action) {
+    *preparePagesForPrinting(action) {
         const { from, to } = action.payload;
-        this.printTask = yield fork(this.printManager.preparePagesForPrinting.bind(this.printManager), from, to);
+        this.printTask = yield fork(
+            this.printManager.preparePagesForPrinting.bind(this.printManager),
+            from,
+            to
+        );
     }
 
-    * cancelPrintTaskIfRequired() {
+    *cancelPrintTaskIfRequired() {
         if (this.printTask) {
             this.printTask.cancel();
             this.printTask = null;
@@ -485,33 +578,66 @@ class RootSaga {
         }
     }
 
-    * main() {
-        yield takeLatest(Constants.CREATE_DOCUMENT_FROM_ARRAY_BUFFER_ACTION, this.withErrorHandler(this.createDocumentFromArrayBuffer));
-        yield takeLatest(Constants.SET_NEW_PAGE_NUMBER_ACTION, this.withErrorHandler(this.fetchPageData));
-        yield takeLatest(Constants.SET_PAGE_BY_URL_ACTION, this.withErrorHandler(this.setPageByUrl));
-        yield takeLatest(ActionTypes.SAVE_DOCUMENT, this.withErrorHandler(this.saveDocument));
-        yield takeLatest(Constants.CLOSE_DOCUMENT_ACTION, this.withErrorHandler(this.resetWorkerAndStorages));
-        yield takeLatest(Constants.SET_API_CALLBACK_ACTION, this.withErrorHandler(this.setCallback));
-        yield takeLatest(ActionTypes.SET_VIEW_MODE, this.withErrorHandler(this.handleViewModeSwitch));
-        yield takeLatest(ActionTypes.UPDATE_OPTIONS, this.withErrorHandler(this.updateOptions));
-        yield takeLatest(ActionTypes.CONFIGURE, this.withErrorHandler(this.configure));
-        yield takeLatest(ActionTypes.LOAD_DOCUMENT_BY_URL, this.loadDocumentByUrl.bind(this));
+    *main() {
+        yield takeLatest(
+            Constants.CREATE_DOCUMENT_FROM_ARRAY_BUFFER_ACTION,
+            this.withErrorHandler(this.createDocumentFromArrayBuffer)
+        );
+        yield takeLatest(
+            Constants.SET_NEW_PAGE_NUMBER_ACTION,
+            this.withErrorHandler(this.fetchPageData)
+        );
+        yield takeLatest(
+            Constants.SET_PAGE_BY_URL_ACTION,
+            this.withErrorHandler(this.setPageByUrl)
+        );
+        yield takeLatest(
+            ActionTypes.SAVE_DOCUMENT,
+            this.withErrorHandler(this.saveDocument)
+        );
+        yield takeLatest(
+            Constants.CLOSE_DOCUMENT_ACTION,
+            this.withErrorHandler(this.resetWorkerAndStorages)
+        );
+        yield takeLatest(
+            Constants.SET_API_CALLBACK_ACTION,
+            this.withErrorHandler(this.setCallback)
+        );
+        yield takeLatest(
+            ActionTypes.SET_VIEW_MODE,
+            this.withErrorHandler(this.handleViewModeSwitch)
+        );
+        yield takeLatest(
+            ActionTypes.UPDATE_OPTIONS,
+            this.withErrorHandler(this.updateOptions)
+        );
+        yield takeLatest(
+            ActionTypes.CONFIGURE,
+            this.withErrorHandler(this.configure)
+        );
+        yield takeLatest(
+            ActionTypes.LOAD_DOCUMENT_BY_URL,
+            this.loadDocumentByUrl.bind(this)
+        );
 
-        yield takeLatest(ActionTypes.START_TO_BUNDLE, this.withErrorHandler(this.bundleDocument));
-        yield takeLatest([
-                ActionTypes.ERROR,
-                ActionTypes.CLOSE_SAVE_DIALOG,
-            ],
+        yield takeLatest(
+            ActionTypes.START_TO_BUNDLE,
+            this.withErrorHandler(this.bundleDocument)
+        );
+        yield takeLatest(
+            [ActionTypes.ERROR, ActionTypes.CLOSE_SAVE_DIALOG],
             this.withErrorHandler(this.hardReloadIfRequired)
         );
 
-        yield takeLatest([
-                ActionTypes.ERROR,
-                ActionTypes.CLOSE_PRINT_DIALOG,
-            ], this.withErrorHandler(this.cancelPrintTaskIfRequired)
+        yield takeLatest(
+            [ActionTypes.ERROR, ActionTypes.CLOSE_PRINT_DIALOG],
+            this.withErrorHandler(this.cancelPrintTaskIfRequired)
         );
 
-        yield takeLatest(ActionTypes.PREPARE_PAGES_FOR_PRINTING, this.withErrorHandler(this.preparePagesForPrinting));
+        yield takeLatest(
+            ActionTypes.PREPARE_PAGES_FOR_PRINTING,
+            this.withErrorHandler(this.preparePagesForPrinting)
+        );
 
         yield* this.withErrorHandler(this.loadOptions)();
 
@@ -524,4 +650,5 @@ class RootSaga {
 }
 
 // a new object should be created each time in order to provide an ability to create many independent instances of the viewer
-export default (dispatch) => RootSaga.prototype.main.bind(new RootSaga(dispatch));
+export default (dispatch) =>
+    RootSaga.prototype.main.bind(new RootSaga(dispatch));

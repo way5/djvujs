@@ -1,5 +1,5 @@
-import { createSelector } from 'reselect';
-import { ActionTypes } from '../constants';
+import { createSelector } from "reselect";
+import { ActionTypes } from "../constants";
 
 const initialState = Object.freeze({
     isPrintDialogOpened: false,
@@ -34,11 +34,11 @@ export default function fileProcessingReducer(state = initialState, action) {
     }
 }
 
-const $ = selector => createSelector(state => state.printState, selector);
+const $ = (selector) => createSelector((state) => state.printState, selector);
 
 export const get = {
-    isPrintDialogOpened: $(s => s.isPrintDialogOpened),
-    isPreparingForPrinting: $(s => s.isPreparingForPrinting),
-    printProgress: $(s => s.printProgress),
-    pagesForPrinting: $(s => s.pagesForPrinting),
+    isPrintDialogOpened: $((s) => s.isPrintDialogOpened),
+    isPreparingForPrinting: $((s) => s.isPreparingForPrinting),
+    printProgress: $((s) => s.printProgress),
+    pagesForPrinting: $((s) => s.pagesForPrinting),
 };

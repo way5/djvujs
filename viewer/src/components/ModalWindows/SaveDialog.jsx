@@ -1,34 +1,11 @@
 import React from "react";
-// import styled from "styled-components";
 import ModalWindow from "./ModalWindow";
 import { useTranslation } from "../Translation";
 import { useDispatch, useSelector } from "react-redux";
-// import { TextButton } from "../StyledPrimitives";
 import { get } from "../../reducers";
 import { ActionTypes } from "../../constants";
 import ProgressBar from "../misc/ProgressBar";
 import { normalizeFileName } from "../../utils";
-
-// const Root = styled.div`
-//     padding: 1em;
-// `;
-
-// const OptionButton = styled(TextButton)`
-//     width: 10em;
-// `;
-
-// const OptionsWrapper = styled.div`
-//     display: flex;
-//     justify-content: space-around;
-//     margin-top: 2em;
-// `;
-
-// const ProcessingBlock = styled.div`
-//     margin-top: 2em;
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-// `;
 
 const getBundledFileName = (fileName) => {
     const normalized = normalizeFileName(fileName);
@@ -78,10 +55,7 @@ export default () => {
             <div className='save-dialog'>
                 {!isBundling ? (
                     <>
-                        <div
-                            className='notify'
-                            // css={'margin-bottom: 2em;'}
-                        >
+                        <div className='notify'>
                             {t(
                                 "You are trying to save an indirect (multi-file) document."
                             ) + " "}
@@ -119,13 +93,7 @@ export default () => {
                     <div className='processing-block'>
                         {!url ? (
                             <>
-                                <div
-                                    className='url'
-                                    // css={`
-                                    //     text-align: center;
-                                    //     margin-bottom: 1em;
-                                    // `}
-                                >
+                                <div className='url'>
                                     {t("Downloading and bundling the document")}
                                     ... {percentage}%
                                 </div>
@@ -135,13 +103,7 @@ export default () => {
                             </>
                         ) : (
                             <>
-                                <div
-                                    className='save'
-                                    // css={`
-                                    //     text-align: center;
-                                    //     margin-bottom: 1em;
-                                    // `}
-                                >
+                                <div className='save'>
                                     {t(
                                         "The document has been downloaded and bundled into one file successfully"
                                     )}
@@ -151,10 +113,6 @@ export default () => {
                                     as='a'
                                     href={url}
                                     download={getBundledFileName(fileName)}
-                                    // css={`
-                                    //     text-decoration: none;
-                                    //     margin: 0.5em;
-                                    // `}
                                 >
                                     {t("Save")}
                                 </button>

@@ -1,36 +1,12 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaExpand, FaCompress } from "react-icons/fa";
-
 import ModalWindow from './ModalWindow';
 import Actions from '../../actions/actions';
 import { get } from '../../reducers';
 import DjVu from '../../DjVu';
 import { useTranslation } from '../Translation';
-import styled from "styled-components";
 
-const Root = styled.div`
-    padding: 0.5em;
-    font-size: ${p => p.theme.isMobile ? 12 : 20}px;
-`;
-
-const Header = styled.div`
-    font-size: 1.2em;
-    width: 100%;
-    font-weight: 600;
-    border-bottom: 1px solid var(--border-color);
-    margin: 0.5em 0;
-`;
-
-const HotkeyGrid = styled.div`
-    display: grid;
-    grid-template-columns: auto 1fr;
-    column-gap: 0.5em;
-
-    & > :nth-child(2n+1) {
-        text-align: center;
-    }
-`;
 
 export default () => {
     const isShown = useSelector(get.isHelpWindowShown);
@@ -44,8 +20,8 @@ export default () => {
 
     return (
         <ModalWindow onClose={() => dispatch(Actions.closeHelpWindowAction())} isFixedSize={true}>
-            <Root>
-                <Header>{`DjVu.js Viewer v.${DjVu.Viewer.VERSION} (DjVu.js v.${DjVu.VERSION})`}</Header>
+            <div className='help-window'>
+                <div className='header'>{`DjVu.js Viewer v.${DjVu.Viewer.VERSION} (DjVu.js v.${DjVu.VERSION})`}</div>
                 <div>
                     {t('The application for viewing .djvu files in the browser.')}<br />
                     {t("If something doesn't work properly, feel free to write about the problem at #email.", {
@@ -63,16 +39,16 @@ export default () => {
                     })}<br />
                 </div>
 
-                <Header>{t('Hotkeys')}</Header>
-                <HotkeyGrid>
+                <div className='header'>{t('Hotkeys')}</div>
+                <div className='hotkey-grid'>
                     <em>Ctrl+S</em><span>- {t('save the document')}</span>
                     <em>{'\u2190'}</em><span>- {t('go to the previous page')}</span>
                     <em>{'\u2192'}</em><span>- {t('go to the next page')}</span>
-                </HotkeyGrid>
+                </div>
 
                 {hideFullPageSwitch ? null :
                     <>
-                        <Header>{t('Controls')}</Header>
+                        <div className='header'>{t('Controls')}</div>
                         <div>
                             {t("#expandIcon and #collapseIcon are to switch the viewer to the full page mode and back.", {
                                 "#expandIcon": <FaExpand />,
@@ -82,7 +58,7 @@ export default () => {
                         </div>
                     </>
                 }
-            </Root>
+            </div>
         </ModalWindow>
     );
 }

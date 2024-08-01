@@ -9,14 +9,14 @@ React icons: https://react-icons.github.io/react-icons/search
 /*
 THEMES
 */
-.background-color {
+.background-color-primary {
     @apply bg-[#fcfcfc] dark:bg-[#1e1e1e];
 }
 .background-color-secondary {
     @apply bg-[#eee] dark:bg-[#333333];
 }
 .background-color-modal {
-    @extend .background-color;
+    @extend .background-color-primary;
 }
 .text-color {
     @apply text-gray-900 dark:text-gray-100;
@@ -24,7 +24,7 @@ THEMES
 .text-color-dim {
     @apply text-gray-500 dark:text-gray-500;
 }
-.border-color {
+.border-color-primary {
     @apply border-gray-400 dark:border-gray-200;
 }
 .border-color-pale {
@@ -87,7 +87,7 @@ ELEMENTS
 .djvujs-viewer-root {
     @apply text-xl md:text-lg p-1 font-sans overflow-hidden relative box-border
             h-full flex-col items-center justify-center flex;
-    @extend .background-color;
+    @extend .background-color-primary;
     @extend .text-color;
 
     a {
@@ -103,7 +103,7 @@ ELEMENTS
     }
 
     *::-webkit-scrollbar-corner {
-        @extend .background-color;
+        @extend .background-color-primary;
     }
 
     .icon-button {
@@ -116,7 +116,7 @@ ELEMENTS
 
     .text-button {
         @apply border border-solid rounded-sm p-1 cursor-pointer;
-        @extend .border-color;
+        @extend .border-color-primary;
 
         &:hover {
             @extend .background-color-secondary;
@@ -146,8 +146,8 @@ ELEMENTS
 
     .styled-input {
         @apply rounded-md;
-        @extend .border-color;
-        @extend .background-color;
+        @extend .border-color-primary;
+        @extend .background-color-primary;
         @extend .text-color;
     }
 
@@ -158,7 +158,7 @@ ELEMENTS
     &.full-page-view {
         @apply top-0 left-0 fixed w-full h-full z-[1000];
         /* just in case if the root container has transparent bg */
-        @extend .background-color;
+        @extend .background-color-primary;
     }
 
     .language-selector {
@@ -317,8 +317,26 @@ ELEMENTS
         .error-window {
             .body {
                 &.json {
-                    @apply whitespace-pre font-mono;
+                    @apply whitespace-pre font-mono p-2 border border-solid;
+                    @extend .border-color-pale;
                 }
+            }
+        }
+    }
+
+    .help-window {
+        @apply p-2 text-base sm:text-lg;
+
+        .header {
+            @apply text-xl w-full font-bold border-solid border-0 border-b my-2 mx-0;
+            @extend .border-color-primary;
+        }
+
+        .hotkey-grid {
+            @apply grid grid-cols-2 grid-rows-3 gap-x-2;
+
+            & > :nth-child(2n+1) {
+                @apply text-center;
             }
         }
     }
@@ -329,7 +347,7 @@ ELEMENTS
     .file-zone {
         @apply flex items-center justify-center flex-col cursor-pointer max-w-20 min-h-5
                 p-2 border border-dashed m-auto rounded-lg;
-        @extend .border-color;
+        @extend .border-color-primary;
         @extend .background-color-secondary;
 
         &:hover {
@@ -340,9 +358,24 @@ ELEMENTS
 
         &.drag-over-state {
             @apply animate-shake animate-duration-1000 animate-infinite opacity-80;
-            @extend .border-color;
+            @extend .border-color-primary;
         }
     }
+
+    /*
+    Will not be used since we rely on tailwind theme switching strategy
+    .theme-switcher {
+        @apply mt-4;
+
+        &.active {
+            @apply scale-150;
+            @extend .highlight-color;
+        }
+
+        svg {
+            @apply my-0 mx-2;
+        }
+    } */
 
     /*
     INITIAL SCREEN
@@ -393,7 +426,7 @@ ELEMENTS
 
                 pre {
                     @apply border-solid border w-fit m-auto bg-inherit whitespace-pre-wrap p-2;
-                    @extend .border-color;
+                    @extend .border-color-primary;
                 }
             }
 
@@ -403,6 +436,15 @@ ELEMENTS
 
                 .header {
                     @apply font-bold text-xl mb-2;
+                }
+
+                .body {
+                    :first-child {
+                        @apply mb-3 text-lg;
+                    }
+                    :last-child {
+                        @apply whitespace-pre text-base;
+                    }
                 }
             }
 
@@ -498,8 +540,8 @@ ELEMENTS
             transition:
                 margin-left 0.3s,
                 width 0.3s;
-            @extend .border-color;
-            /* @extend .background-color; */
+            @extend .border-color-primary;
+            /* @extend .background-color-primary; */
 
             &.mobile {
                 @apply absolute z-10 top-0 left-0 h-full w-[100%];
@@ -534,7 +576,7 @@ ELEMENTS
                     .header {
                         @apply border-solid border-0 border-b text-xl mb-2 pb-1 flex
                                 justify-between items-center;
-                        @extend .border-color;
+                        @extend .border-color-primary;
 
                         span:first-child {
                             @apply mr-2 overflow-hidden text-ellipsis;
@@ -566,7 +608,7 @@ ELEMENTS
             .page-border {
                 @apply box-border h-full w-2 relative flex flex-col justify-center
                         items-center border-solid border-0 border-l touch-pan-x touch-pan-y;
-                @extend .border-color;
+                @extend .border-color-primary;
 
                 div {
                     @apply w-1 h-1 mb-1 bg-gray-400 dark:bg-gray-200 scale-x-75 scale-y-125 rotate-45;
@@ -591,7 +633,7 @@ ELEMENTS
         @apply self-stretch relative border border-solid rounded-t-lg py-2 px-3
                 flex flex-nowrap justify-between items-center z-20 box-border
                 transition-[margin-bottom] duration-500 mt-2 !select-none;
-        @extend .border-color;
+        @extend .border-color-primary;
 
         &.hidden-state {
             /* -1px just for cypress */
@@ -683,7 +725,7 @@ ELEMENTS
                     }
 
                     &:active {
-                        @extend .background-color;
+                        @extend .background-color-primary;
                         @extend .text-color;
                     }
                 }
@@ -719,7 +761,7 @@ ELEMENTS
                 transition:
                     transform 1s,
                     top 0.5s;
-                @extend .background-color;
+                @extend .background-color-primary;
 
                 &.toolbar-hidden {
                     @apply absolute right-12 -top-24 rotate-180 scale-[180%] border-solid border p-2;
@@ -779,7 +821,7 @@ ELEMENTS
                     border-gray-300 dark:border-gray-100 rounded-tl-lg rounded-br-lg p-2 overflow-hidden
                     flex flex-col transition-transform duration-500 shadow-md;
             bottom: calc(100% + theme("margin.2"));
-            @extend .background-color;
+            @extend .background-color-primary;
 
             &.transform-hide {
                 @apply translate-x-0;
@@ -808,7 +850,7 @@ ELEMENTS
 
                 .document-wrapper {
                     @apply border-solid border-0 border-b p-1 mb-2;
-                    @extend .border-color;
+                    @extend .border-color-primary;
 
                     & > div:last-child {
                         @apply mb-2;
@@ -831,7 +873,7 @@ ELEMENTS
 
                     .document-controls {
                         @apply pt-1 flex flex-col sm:flex-row justify-evenly items-center mb-2;
-                        @extend .border-color;
+                        @extend .border-color-primary;
 
                         & > * {
                             @apply mb-2;
@@ -839,7 +881,7 @@ ELEMENTS
 
                         &.mobile-style {
                             @apply flex flex-col pl-4 items-start border-solid border-0 border-b mb-4;
-                            @extend .border-color;
+                            @extend .border-color-primary;
 
                             & > * {
                                 @apply mb-2;

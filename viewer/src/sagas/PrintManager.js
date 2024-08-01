@@ -7,7 +7,7 @@ export default class PrintManager {
         this.pageStorage = pageStorage;
     }
 
-    * preparePagesForPrinting(from, to) {
+    *preparePagesForPrinting(from, to) {
         this.djvuWorker.cancelAllTasks();
         let loaded = 0;
         const total = to - from + 1;
@@ -18,7 +18,10 @@ export default class PrintManager {
         }
 
         function* updateProgress() {
-            yield put({ type: ActionTypes.UPDATE_PRINT_PROGRESS, payload: Math.round(loaded / total * 100) });
+            yield put({
+                type: ActionTypes.UPDATE_PRINT_PROGRESS,
+                payload: Math.round((loaded / total) * 100),
+            });
         }
 
         yield* updateProgress();
@@ -26,7 +29,10 @@ export default class PrintManager {
         if (loaded !== total) {
             for (let i = from; i <= to; i++) {
                 if (!this.pageStorage.getPage(i)) {
-                    const page = yield this.djvuWorker.doc.getPage(i).createPngObjectUrl().run();
+                    const page = yield this.djvuWorker.doc
+                        .getPage(i)
+                        .createPngObjectUrl()
+                        .run();
                     this.pageStorage.addPage(i, page);
                     loaded++;
                     yield* updateProgress();

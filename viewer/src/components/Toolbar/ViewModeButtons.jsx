@@ -9,69 +9,11 @@ import {
 import { get } from "../../reducers";
 import Constants, { ActionTypes } from "../../constants";
 import { useTranslation } from "../Translation";
-// import styled from 'styled-components';
-// import { controlButton } from "../cssMixins";
-// import { ControlButton } from "../StyledPrimitives";
 import { useAppContext } from "../AppContext.jsx";
-
-// const ContinuousScrollButton = styled.span`
-//     ${controlButton};
-//     display: inline-flex;
-//     flex-direction: column;
-//     flex-wrap: nowrap;
-//     justify-content: center;
-//     overflow: hidden;
-//     max-height: 100%;
-
-//     svg {
-//         flex: 0 0 auto;
-//     }
-// `;
-
-// const ContinuousScrollButtonWrapper = styled.span`
-//     height: 100%;
-//     box-sizing: border-box;
-//     display: inline-flex;
-//     align-items: center;
-//     opacity: 1;
-// `;
-
-// const Root = styled.span`
-//     display: inline-flex;
-//     align-items: center;
-//     height: calc(var(--button-basic-size) * 1.2);
-
-//     & > span:not(${ContinuousScrollButtonWrapper}), ${ContinuousScrollButton} {
-//         opacity: 0.5;
-//     }
-// `;
 
 const PageCount = ({ value, max, onChange, title, style }) => {
     return (
-        <span
-            className='page-count'
-            title={title}
-            style={style}
-            // css={`
-            //     display: inline-flex;
-            //     align-items: center;
-
-            //     svg {
-            //         font-size: 2em;
-            //         cursor: pointer;
-
-            //         &[djvujs-disabled] {
-            //             opacity: 0.5;
-            //             cursor: not-allowed;
-            //             pointer-events: none;
-            //         }
-
-            //         &:hover {
-            //             transform: scale(1.1);
-            //         }
-            //     }
-            // `}
-        >
+        <span className='page-count' title={title} style={style}>
             <FaCaretLeft
                 djvujs-disabled={value < 2 ? 1 : null}
                 onClick={() => onChange(value - 1)}
@@ -155,9 +97,7 @@ const ViewModeButtons = () => {
                         <>
                             <PageCount
                                 style={
-                                    !isContScroll
-                                        ? { display: "none" }
-                                        : null
+                                    !isContScroll ? { display: "none" } : null
                                 }
                                 title={t("Number of pages in a row")}
                                 max={Constants.MAX_PAGE_COUNT_IN_ROW}
@@ -180,9 +120,7 @@ const ViewModeButtons = () => {
                             />
                             <PageCount
                                 style={
-                                    !isContScroll
-                                        ? { display: "none" }
-                                        : null
+                                    !isContScroll ? { display: "none" } : null
                                 }
                                 title={t("Number of pages in the first row")}
                                 max={Math.min(

@@ -9,35 +9,6 @@ import Actions from "../../actions/actions";
 import PageNumberElement from "./PageNumber";
 import { get } from "../../reducers";
 import { TranslationContext } from "../Translation";
-// import styled, { css } from 'styled-components';
-// import { controlButton } from "../cssMixins";
-
-// const Root = styled.div`
-//     margin: 0 0.5em;
-//     flex: 0 0 auto;
-//     display: flex;
-//     flex-wrap: nowrap;
-//     justify-content: center;
-//     align-items: center;
-//     height: 100%;
-// `;
-
-// const navButtonStyle = css`
-//     ${controlButton};
-//     margin: 0 0.1em;
-//     border-radius: 100%;
-//     cursor: pointer;
-
-//     &:hover {
-//         transform: scale(1.1);
-//         box-shadow: 0 0 1px gray;
-//     }
-
-//     &:active {
-//         background: #555;
-//         color: white;
-//     }
-// `;
 
 class PageNumberBlock extends React.Component {
     static propTypes = {
@@ -81,7 +52,6 @@ class PageNumberBlock extends React.Component {
             >
                 <FaRegArrowAltCircleLeft
                     onClick={this.goToPrevPage}
-                    // css={navButtonStyle}
                     className='nav-button'
                 />
 
@@ -89,7 +59,6 @@ class PageNumberBlock extends React.Component {
 
                 <FaRegArrowAltCircleRight
                     onClick={this.goToNextPage}
-                    // css={navButtonStyle}
                     className='nav-button'
                 />
             </div>

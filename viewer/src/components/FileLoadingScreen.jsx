@@ -1,19 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { get } from "../reducers";
-// import styled from 'styled-components';
 import ProgressBar from "./misc/ProgressBar";
 import LoadingPhrase from "./misc/LoadingPhrase";
-
-// const Root = styled.div`
-//     flex-direction: column;
-//     width: 100%;
-//     height: 100%;
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     white-space: nowrap;
-// `;
 
 const FileLoadingScreen = () => {
     const loaded = useSelector(get.loadedBytes);
@@ -33,9 +22,8 @@ const FileLoadingScreen = () => {
                     : ""}
             </div>
             <ProgressBar
-                className={total ? null : 'hidden' }
+                className={total ? null : "hidden"}
                 percentage={percentage}
-                // css={total ? null : `visibility: hidden`}
             />
         </div>
     );

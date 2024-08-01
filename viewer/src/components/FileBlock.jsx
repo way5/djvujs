@@ -1,48 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import { FaUpload } from "react-icons/fa";
-
-import Actions from '../actions/actions';
-import { TranslationContext } from './Translation';
-// import styled from 'styled-components';
-
-// const FileIcon = styled(FaUpload)`
-//     flex: 0 0 auto;
-//     font-size: var(--button-basic-size, 1.5em);
-// `;
-
-// const FileName = styled.span`
-//     overflow: hidden;
-//     flex: 0 1 auto;
-//     max-width: 20em;
-//     text-align: left;
-//     text-overflow: ellipsis;
-//     margin: 0 0.5em;
-// `;
-
-// const Root = styled.div`
-//     flex: 0 1 auto;
-//     cursor: pointer;
-//     display: flex;
-//     flex-wrap: nowrap;
-//     align-items: center;
-//     justify-content: flex-start;
-//     white-space: nowrap;
-//     overflow: hidden;
-
-//     &:hover {
-//         ${FileIcon} {
-//             transform: scale(1.1)
-//         }
-//     }
-// `;
+import Actions from "../actions/actions";
+import { TranslationContext } from "./Translation";
 
 class FileBlock extends React.Component {
-
     static propTypes = {
         fileName: PropTypes.string,
-        createNewDocument: PropTypes.func.isRequired
+        createNewDocument: PropTypes.func.isRequired,
     };
 
     static contextType = TranslationContext;
@@ -57,7 +23,7 @@ class FileBlock extends React.Component {
         fr.readAsArrayBuffer(file);
         fr.onload = () => {
             this.props.createNewDocument(fr.result, file.name);
-        }
+        };
     };
 
     onClick = (e) => {
@@ -69,20 +35,22 @@ class FileBlock extends React.Component {
 
         return (
             <div
-                className="file-name"
+                className='file-name'
                 onClick={this.onClick}
                 title={t("Open another .djvu file")}
             >
                 <FaUpload />
                 <span className='file-name'>
-                    {this.props.fileName == null ? t("Choose a file") : (this.props.fileName || '')}
+                    {this.props.fileName == null
+                        ? t("Choose a file")
+                        : this.props.fileName || ""}
                 </span>
                 <input
-                    style={{ display: 'none' }}
-                    type="file"
+                    style={{ display: "none" }}
+                    type='file'
                     onChange={this.onChange}
-                    accept=".djvu, .djv"
-                    ref={node => this.input = node}
+                    accept='.djvu, .djv'
+                    ref={(node) => (this.input = node)}
                 />
             </div>
         );

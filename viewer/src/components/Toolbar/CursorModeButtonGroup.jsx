@@ -5,22 +5,6 @@ import { get } from "../../reducers";
 import Constants from "../../constants";
 import Actions from "../../actions/actions";
 import { useTranslation } from "../Translation";
-// import styled from "styled-components";
-// import { controlButton } from "../cssMixins";
-
-// const Root = styled.div`
-//     white-space: nowrap;
-//     padding: 0 0.1em;
-
-//     span {
-//         opacity: 0.5;
-//         display: inline-block;
-
-//         &.active {
-//             opacity: 1;
-//         }
-//     }
-// `;
 
 const CursorModeButtonGroup = () => {
     const cursorMode = useSelector(get.cursorMode);
