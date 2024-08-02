@@ -7,7 +7,6 @@ export default {
     mode: "jit",
     important: true,
     content: [
-        "./index.html",
         "./src/**/*.{js,ts,jsx,tsx}",
     ],
     options: {

@@ -1,44 +1,37 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import fs from "fs";
-import path from 'path';
+import path from "path";
 import serveStatic from "serve-static";
 import { create as createContentDisposition } from "content-disposition-header";
 import URL from "url";
 import sassDts from "vite-plugin-sass-dts";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 
-// https://vitejs.dev/config/
+// Ref.: https://vitejs.dev/config/
 export default defineConfig(({ command }) => ({
     css: {
         preprocessorOptions: {
-            scss: {
-                // additionalData: `@use "@/styles" as common;`,
-                // importer(...args) {
-                //     if (args[0] !== "@/styles") {
-                //         return;
-                //     }
-
-                //     return {
-                //         file: `${path.resolve(__dirname, "./public/styles")}`,
-                //     };
-                // },
-            },
+            scss: {},
         },
     },
     plugins: [
         react({
-            babel: {
-                // plugins: ["babel-plugin-styled-components"],
-            },
+            babel: {},
         }),
         sassDts({
             enabledMode: ["development", "production"],
-            global: {
-                generate: true,
-                outputFilePath: path.resolve(__dirname, "./dist/style.d.ts"),
-            },
             sourceDir: path.resolve(__dirname, "./src"),
-            outputDir: path.resolve(__dirname, "./dist"),
+            outputDir: path.resolve(__dirname, "./dist")
+        }),
+        viteStaticCopy({
+            targets: [
+                {
+                    src: './src/app.scss',
+                    dest: '',
+                    rename: (name, extension, fullPath) => `djvu.${extension}`
+                },
+            ],
         }),
         {
             name: "custom-middlewares",
@@ -59,11 +52,32 @@ export default defineConfig(({ command }) => ({
 
                 server.middlewares.use(serveStatic("../library/assets"));
             },
-        },
+        }
     ],
     build: {
+        assetsDir: "",
+        minify: "terser",
+        cssMinify: "terser",
+        reportCompressedSize: false,
+        copyPublicDir: false,
+        terserOptions: {
+            compress: {
+                defaults: true,
+            },
+            ie8: true,
+            safari10: true,
+        },
         rollupOptions: {
+            input: {
+                app: "./index.html",
+            },
             output: {
+                assetFileNames: (a) => {
+                    if (a.name === "app.css") return "djvu.css";
+                    else if (a.name === "index.js") return "djvu_viewer.js";
+                    else if (a.name === "app.scss") return "djvu.scss";
+                    else return a.name;
+                },
                 entryFileNames: "djvu_viewer.js",
             },
         },

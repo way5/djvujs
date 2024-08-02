@@ -1,16 +1,16 @@
 {
     "name": "djvu.js_project",
     "scripts": {
+        "dev": "cd ./viewer && npm run start",
         "make": "npm run install && npm run build",
         "install": "cd library && npm install && cd .. && cd viewer && npm install && cd ..",
         "clean": "git clean -fdX --exclude=!/.*/",
-        "watch": "cd ./viewer && npm run start",
         "build": "cd library && npm run build && cd .. && cd viewer && npm run build && cd .. && npm run copy",
         "copy": "node build.js copy",
         "remake": "npm run clean && npm run install && npm run build",
         "_ext": "cd extension && npx web-ext build -n {name}-v{manifest_version}-{version}.zip -o",
-        "ext2": "node .js v2 && npm run _ext",
-        "ext3": "node .js v3 && npm run _ext",
+        "ext2": "node build.js v2 && npm run _ext",
+        "ext3": "node build.js v3 && npm run _ext",
         "ext": "npm run ext2 && npm run ext3"
     }
 }
