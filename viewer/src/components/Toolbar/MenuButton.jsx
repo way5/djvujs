@@ -1,9 +1,9 @@
-import { FaTools } from "react-icons/fa";
+import { TbAdjustmentsAlt } from "react-icons/tb";
 import React from "react";
 
 export default ({ onClick }) => {
     return (
-        <FaTools
+        <TbAdjustmentsAlt
             className="menu-button"
             onClick={onClick}
             data-djvujs-id="menu_button"

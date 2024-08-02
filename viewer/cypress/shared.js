@@ -12,7 +12,7 @@ export function optionsWindowShouldBeOpen() {
     cy.get(customClass('modal_window')).should('be.visible').within(() => {
         cy.contains('Options');
         cy.contains('Language');
-        cy.contains('Color theme');
+        // cy.contains('Color theme');
     });
 }
 

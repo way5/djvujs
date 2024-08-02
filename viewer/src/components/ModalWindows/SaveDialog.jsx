@@ -45,13 +45,7 @@ export default () => {
     const percentage = Math.round(progress * 100);
 
     return (
-        <ModalWindow
-            onClose={closeDialog}
-            isFixedSize={false}
-            css={`
-                width: 25em;
-            `}
-        >
+        <ModalWindow onClose={closeDialog} isFixedSize={false}>
             <div className='save-dialog'>
                 {!isBundling ? (
                     <>

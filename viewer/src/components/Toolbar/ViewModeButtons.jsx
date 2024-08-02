@@ -1,11 +1,12 @@
 import React from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import {
-    FaRegFileAlt,
-    FaRegFileImage,
-    FaCaretLeft,
-    FaCaretRight,
-} from "react-icons/fa";
+    TbRectangleVertical,
+    TbCarouselVertical,
+    TbFileText,
+    TbCaretRight,
+    TbCaretLeft
+} from 'react-icons/tb';
 import { get } from "../../reducers";
 import Constants, { ActionTypes } from "../../constants";
 import { useTranslation } from "../Translation";
@@ -14,12 +15,12 @@ import { useAppContext } from "../AppContext.jsx";
 const PageCount = ({ value, max, onChange, title, style }) => {
     return (
         <span className='page-count' title={title} style={style}>
-            <FaCaretLeft
+            <TbCaretLeft
                 djvujs-disabled={value < 2 ? 1 : null}
                 onClick={() => onChange(value - 1)}
             />
             <span>{value}</span>
-            <FaCaretRight
+            <TbCaretRight
                 djvujs-disabled={value >= max ? 1 : null}
                 onClick={() => onChange(value + 1)}
             />
@@ -64,7 +65,7 @@ const ViewModeButtons = () => {
                 title={t("Text view mode")}
                 style={viewMode === Constants.TEXT_MODE ? { opacity: 1 } : null}
             >
-                <FaRegFileAlt
+                <TbFileText
                     className='icon-button'
                     onClick={enableTextMode}
                 />
@@ -77,22 +78,19 @@ const ViewModeButtons = () => {
                         : null
                 }
             >
-                <FaRegFileImage
+                <TbRectangleVertical
                     className='icon-button'
                     onClick={enableSinglePageMode}
                 />
             </div>
             {isIndirect ? null : (
                 <div className='continous-scroll-button-wrapper'>
-                    <div
+                    <TbCarouselVertical
                         className='continous-scroll-button'
                         style={isContScroll ? { opacity: 1 } : null}
                         title={t("Continuous scroll view mode")}
                         onClick={enableContinuousScrollMode}
-                    >
-                        <FaRegFileImage />
-                        <FaRegFileImage />
-                    </div>
+                    />
                     {isMobile ? null : (
                         <>
                             <PageCount

@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FaRegHandPaper, FaICursor } from "react-icons/fa";
+import { TbHandStop, TbCursorText } from "react-icons/tb";
 import { get } from "../../reducers";
 import Constants from "../../constants";
 import Actions from "../../actions/actions";
@@ -22,7 +22,7 @@ const CursorModeButtonGroup = () => {
                     cursorMode === Constants.TEXT_CURSOR_MODE ? "active" : null
                 }
             >
-                <FaICursor
+                <TbCursorText
                     className='icon-button'
                     onClick={() =>
                         dispatch(
@@ -39,7 +39,7 @@ const CursorModeButtonGroup = () => {
                     cursorMode === Constants.GRAB_CURSOR_MODE ? "active" : null
                 }
             >
-                <FaRegHandPaper
+                <TbHandStop
                     className='icon-button'
                     onClick={() =>
                         dispatch(

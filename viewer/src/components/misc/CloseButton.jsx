@@ -1,9 +1,9 @@
 import React from "react";
-import { FaRegTimesCircle } from "react-icons/fa";
+import { TbPlaystationX } from "react-icons/tb";
 
 export default ({ onClick, className = '' }) => {
     return (
-        <FaRegTimesCircle
+        <TbPlaystationX
             className={'icon-button' + `${className ? ' ' + className : ' close-button'}`}
             onClick={onClick}
             data-djvujs-class="close_button"

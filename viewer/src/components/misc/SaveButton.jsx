@@ -1,5 +1,5 @@
 import React from "react";
-import { FaDownload } from "react-icons/fa";
+import { TbDownload } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
 import { get } from "../../reducers";
 import Actions from "../../actions/actions";
@@ -29,7 +29,7 @@ export default ({ withLabel = false, onClick = () => {}, className = "" }) => {
                     onClick();
                 }}
             >
-                <FaDownload className='icon-button' />
+                <TbDownload className='icon-button' />
                 {withLabel ? <span>{t("Save")}</span> : null}
             </span>
             {isNotificationShown ? (

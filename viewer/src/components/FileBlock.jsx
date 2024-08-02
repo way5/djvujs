@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { FaUpload } from "react-icons/fa";
+import { TbUpload } from "react-icons/tb";
 import Actions from "../actions/actions";
 import { TranslationContext } from "./Translation";
 
@@ -39,7 +39,7 @@ class FileBlock extends React.Component {
                 onClick={this.onClick}
                 title={t("Open another .djvu file")}
             >
-                <FaUpload />
+                <TbUpload />
                 <span className='file-name'>
                     {this.props.fileName == null
                         ? t("Choose a file")

@@ -682,11 +682,6 @@ ELEMENTS
                     @apply inline-flex flex-col flex-nowrap justify-center
                             items-center overflow-hidden;
                     @extend .icon-button;
-
-                    svg {
-                        @apply h-4;
-                        /* flex: 0 0 auto; */
-                    }
                 }
 
                 .page-count {

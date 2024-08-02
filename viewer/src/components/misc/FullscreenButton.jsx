@@ -1,5 +1,5 @@
 import React from "react";
-import { IoDesktopOutline } from "react-icons/io5";
+import { TbArrowsMaximize, TbArrowsMinimize } from "react-icons/tb";
 import { useAppContext } from "../AppContext";
 import { useTranslation } from "../Translation";
 
@@ -7,9 +7,11 @@ import { useTranslation } from "../Translation";
 const FullscreenButton = ({ className = "" }) => {
     const { toggleFullscreen } = useAppContext();
     const t = useTranslation();
+    const {isFullscreen} = useAppContext();
+    const IconElement = (isFullscreen ? TbArrowsMinimize : TbArrowsMaximize);
 
     return (
-        <IoDesktopOutline
+        <IconElement
             className={"icon-button" + (className ? " " + className : "")}
             data-djvujs-class='fullscreen_button'
             title={t("Fullscreen mode")}

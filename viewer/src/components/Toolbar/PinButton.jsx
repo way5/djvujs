@@ -1,10 +1,10 @@
-import { BsFillPinFill, BsPinAngle } from 'react-icons/bs';
+import { TbPinnedFilled, TbPin } from 'react-icons/tb';
 import { useTranslation } from "../Translation";
 
 export default ({ isPinned, onClick }) => {
     const t = useTranslation();
 
-    const PinElement = (isPinned ? BsFillPinFill : BsPinAngle);
+    const PinElement = (isPinned ? TbPinnedFilled : TbPin);
 
     return (
         <PinElement

@@ -13,16 +13,16 @@ export default ({ className }) => {
             target="_blank"
             rel="noopener noreferrer"
             title={t("Add more")}
-            css={`
-                color: var(--color) !important;
-                display: inline-block;
-                height: 1em;
-                width: 1em;
+            // css={`
+            //     color: var(--color) !important;
+            //     display: inline-block;
+            //     height: 1em;
+            //     width: 1em;
 
-                :hover {
-                    transform: scale(1.2);
-                }
-            `}
+            //     :hover {
+            //         transform: scale(1.2);
+            //     }
+            // `}
         >
             <IoAddCircleOutline />
         </a>

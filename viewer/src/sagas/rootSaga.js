@@ -146,7 +146,7 @@ class RootSaga {
         viewMode,
         pageScale,
         language,
-        theme,
+        // theme,
         uiOptions,
     }) {
         if (viewMode)
@@ -176,16 +176,16 @@ class RootSaga {
                 );
             }
         }
-        if (theme) {
-            if (theme === "dark" || theme === "light") {
-                options.theme = theme;
-            } else {
-                console.warn(
-                    'DjVu.js Viewer: only "dark" or "light" themes are supported! Got ' +
-                        theme
-                );
-            }
-        }
+        // if (theme) {
+        //     if (theme === "dark" || theme === "light") {
+        //         options.theme = theme;
+        //     } else {
+        //         console.warn(
+        //             'DjVu.js Viewer: only "dark" or "light" themes are supported! Got ' +
+        //                 theme
+        //         );
+        //     }
+        // }
 
         if (Object.keys(options).length) {
             yield put({

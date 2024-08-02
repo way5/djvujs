@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Actions from "../../actions/actions";
-import { FaPlus, FaMinus } from "react-icons/fa";
+import { TbOctagonPlus, TbOctagonMinus } from "react-icons/tb";
 import { get } from "../../reducers";
 import { TranslationContext } from "../Translation";
 
@@ -66,7 +66,7 @@ class ScaleGizmo extends React.Component {
                 title={t("You also can scale the page via Ctrl+MouseWheel")}
                 data-djvujs-id='scale_gizmo'
             >
-                <FaMinus onClick={this.decreaseScale} />
+                <TbOctagonMinus onClick={this.decreaseScale} />
                 <input
                     onFocus={this.startEditing}
                     onKeyPress={this.onKeyPress}
@@ -79,7 +79,7 @@ class ScaleGizmo extends React.Component {
                     }
                     onChange={this.onChange}
                 />
-                <FaPlus onClick={this.increaseScale} />
+                <TbOctagonPlus onClick={this.increaseScale} />
             </div>
         );
     }

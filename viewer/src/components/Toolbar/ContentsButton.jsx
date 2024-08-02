@@ -1,4 +1,4 @@
-import { FaList, FaListAlt } from "react-icons/fa";
+import { TbLayoutSidebarLeftExpandFilled, TbLayoutSidebarLeftCollapseFilled } from "react-icons/tb";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ActionTypes } from "../../constants";
@@ -10,7 +10,7 @@ export default () => {
     const isOpened = useSelector(get.isContentsOpened);
     const t = useTranslation();
 
-    const ContensButtonElement = isOpened ? FaListAlt : FaList;
+    const ContensButtonElement = isOpened ? TbLayoutSidebarLeftCollapseFilled : TbLayoutSidebarLeftExpandFilled;
 
     return (
         <ContensButtonElement

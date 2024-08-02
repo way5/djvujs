@@ -1,6 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { FaRegPlusSquare, FaRegMinusSquare, FaCircle } from "react-icons/fa";
+import {
+    TbSquareRoundedPlus,
+    TbSquareRoundedMinus,
+    TbAnchor,
+} from "react-icons/tb";
 
 export default class TreeItem extends React.Component {
     static propTypes = {
@@ -24,11 +28,7 @@ export default class TreeItem extends React.Component {
             return null;
         }
         return (
-            <div
-                css={`
-                    padding-left: 0.5em;
-                `}
-            >
+            <div>
                 {this.props.children.map((treeItem, i) => {
                     return <TreeItem key={i} {...treeItem} />;
                 })}
@@ -42,18 +42,14 @@ export default class TreeItem extends React.Component {
 
     render() {
         const Icon = this.state.isCollapsed
-            ? FaRegPlusSquare
-            : FaRegMinusSquare;
+            ? TbSquareRoundedPlus
+            : TbSquareRoundedMinus;
         return (
             <div className='tree'>
                 {this.props.children ? (
                     <Icon onClick={this.toggleItem} />
                 ) : (
-                    <FaCircle
-                        css={`
-                            transform: scale(0.5);
-                        `}
-                    />
+                    <TbAnchor />
                 )}
                 <div>
                     <div className='name' onClick={this.onClick}>

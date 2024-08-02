@@ -2,9 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
-    FaRegArrowAltCircleLeft,
-    FaRegArrowAltCircleRight,
-} from "react-icons/fa";
+    TbCircleArrowLeft,
+    TbCircleArrowRight,
+} from "react-icons/tb";
 import Actions from "../../actions/actions";
 import PageNumberElement from "./PageNumber";
 import { get } from "../../reducers";
@@ -50,14 +50,14 @@ class PageNumberBlock extends React.Component {
                 title={t("Click on the number to enter it manually")}
                 data-djvujs-id='page_number_block'
             >
-                <FaRegArrowAltCircleLeft
+                <TbCircleArrowLeft
                     onClick={this.goToPrevPage}
                     className='nav-button'
                 />
 
                 <PageNumberElement {...this.props} />
 
-                <FaRegArrowAltCircleRight
+                <TbCircleArrowRight
                     onClick={this.goToNextPage}
                     className='nav-button'
                 />

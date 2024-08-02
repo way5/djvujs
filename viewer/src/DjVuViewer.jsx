@@ -1,13 +1,13 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux'
-import App from './components/App.jsx';
-import Actions from './actions/actions';
-import configure from './store';
-import EventEmitter from 'eventemitter3';
-import Constants, { constant, ActionTypes } from './constants';
-import { get } from './reducers';
-import dictionaries from './locales';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import App from "./components/App.jsx";
+import Actions from "./actions/actions";
+import configure from "./store";
+import EventEmitter from "eventemitter3";
+import Constants, { constant, ActionTypes } from "./constants";
+import { get } from "./reducers";
+import dictionaries from "./locales";
 
 const Events = constant({
     PAGE_NUMBER_CHANGED: null,
@@ -16,7 +16,6 @@ const Events = constant({
 });
 
 export default class DjVuViewer extends EventEmitter {
-
     static Events = Events;
     static Constants = Constants;
     static ActionTypes = ActionTypes;
@@ -24,7 +23,7 @@ export default class DjVuViewer extends EventEmitter {
 
     static getAvailableLanguages() {
         return Object.keys(dictionaries);
-    };
+    }
 
     /**
      * Technically, we can pass the same config as to the configure() method.
@@ -36,7 +35,7 @@ export default class DjVuViewer extends EventEmitter {
         config && this.configure(config);
     }
 
-    eventMiddleware = store => next => action => {
+    eventMiddleware = (store) => (next) => (action) => {
         let result;
         switch (action.type) {
             case Constants.SET_NEW_PAGE_NUMBER_ACTION:
@@ -114,7 +113,6 @@ export default class DjVuViewer extends EventEmitter {
      * @param {'continuous'|'single'|'text'} viewMode
      * @param {number} pageScale
      * @param {string} language
-     * @param {'dark'|'light'} theme
      * @param {{
           hideFullPageSwitch: boolean,
           hideFullScreenSwithch: boolean,
@@ -133,32 +131,44 @@ export default class DjVuViewer extends EventEmitter {
         viewMode,
         pageScale,
         language,
-        theme,
+        // theme,
         uiOptions,
     } = {}) {
         this.store.dispatch({
             type: ActionTypes.CONFIGURE,
-            pageNumber, pageRotation, viewMode, pageScale, language, theme, uiOptions,
+            pageNumber,
+            pageRotation,
+            viewMode,
+            pageScale,
+            language,
+            // theme,
+            uiOptions,
         });
 
         return this;
     }
 
     loadDocument(buffer, name = "***", config = {}) {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             this.once(Events.DOCUMENT_CHANGED, () => resolve());
             // the buffer is transferred to the worker, so we copy it
-            this.store.dispatch(Actions.createDocumentFromArrayBufferAction(buffer.slice(0), name, config));
+            this.store.dispatch(
+                Actions.createDocumentFromArrayBufferAction(
+                    buffer.slice(0),
+                    name,
+                    config
+                )
+            );
         });
     }
 
     loadDocumentByUrl(url, config = null) {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             this.once(Constants.END_FILE_LOADING_ACTION, () => resolve());
             this.store.dispatch({
                 type: ActionTypes.LOAD_DOCUMENT_BY_URL,
                 url: url,
-                config: config
+                config: config,
             });
         });
     }

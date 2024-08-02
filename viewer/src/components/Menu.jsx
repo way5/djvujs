@@ -3,7 +3,7 @@ import CloseButton from "./misc/CloseButton";
 import { useSelector } from "react-redux";
 import { get } from "../reducers";
 import FileBlock from "./FileBlock";
-import { FaPrint } from "react-icons/fa";
+import { TbPrinter, TbArticleOff } from "react-icons/tb";
 import { ActionTypes } from "../constants";
 import { useTranslation } from "./Translation";
 import SaveButton from "./misc/SaveButton";
@@ -64,7 +64,7 @@ const Menu = ({ isOpened, onClose }) => {
                             }}
                             title={t("Print document")}
                         >
-                            <FaPrint className='icon-button' />
+                            <TbPrinter className='icon-button' />
                             <span>{t("Print")}</span>
                         </div>
                     )}
@@ -84,7 +84,9 @@ const Menu = ({ isOpened, onClose }) => {
                                 dispatch(Actions.closeDocumentAction())
                             }
                         >
-                            <CloseButton className='icon-button' />
+                            <TbArticleOff
+                                className='icon-button'
+                            />
                             <span>{t("Close")}</span>
                         </div>
                     )}
@@ -95,10 +97,10 @@ const Menu = ({ isOpened, onClose }) => {
 
     return (
         <div
-            style={{
-                minHeight: `min(15em, ${(p) => p.theme.appHeight * 0.7}px)`,
-                maxHeight: `${(p) => p.theme.appHeight * 0.7}px`,
-            }}
+            // style={{
+            //     minHeight: `min(15em, ${(p) => p.theme.appHeight * 0.7}px)`,
+            //     maxHeight: `${(p) => p.theme.appHeight * 0.7}px`,
+            // }}
             className={
                 "menu-block" +
                 (isOpened ? " transform-hide" : " transform-show")

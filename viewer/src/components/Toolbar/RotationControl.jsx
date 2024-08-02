@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FaUndo, FaRedo } from "react-icons/fa";
+import { TbRotate2, TbRotateClockwise2 } from "react-icons/tb";
 import Actions from "../../actions/actions";
 import { get } from "../../reducers";
 import { useTranslation } from "../Translation";
@@ -26,9 +26,9 @@ const RotationControl = () => {
             data-djvujs-id='rotation_control'
             title={t("Rotate the page")}
         >
-            <FaUndo onClick={rotateLeft} />
+            <TbRotate2 onClick={rotateLeft} />
             <div>{rotation}&deg;</div>
-            <FaRedo onClick={rotateRight} />
+            <TbRotateClockwise2 onClick={rotateRight} />
         </div>
     );
 };

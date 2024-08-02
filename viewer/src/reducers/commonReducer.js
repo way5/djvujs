@@ -22,9 +22,9 @@ const initialState = Object.freeze({
         interceptHttpRequests: true, // this value MUST BE DUPLICATED in the extension code
         analyzeHeaders: false, // this value MUST BE DUPLICATED in the extension code
         locale: "en",
-        theme: window.matchMedia("(prefers-color-scheme: dark)").matches
-            ? "dark"
-            : "light",
+        // theme: window.matchMedia("(prefers-color-scheme: dark)").matches
+        //     ? "dark"
+        //     : "light",
         preferContinuousScroll: false,
         pageCountInRow: 1,
         firstRowPageCount: 1,
