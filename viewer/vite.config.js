@@ -12,7 +12,9 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 export default defineConfig(({ command }) => ({
     css: {
         preprocessorOptions: {
-            scss: {},
+            scss: {
+                api: "modern",
+            },
         },
     },
     plugins: [
@@ -84,5 +86,6 @@ export default defineConfig(({ command }) => ({
     },
     server: {
         port: 8000,
+        open: true,
     },
 }));
