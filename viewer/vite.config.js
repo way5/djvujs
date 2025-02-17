@@ -83,9 +83,5 @@ export default defineConfig(({ command }) => ({
                 entryFileNames: "djvu_viewer.js",
             },
         },
-    },
-    server: {
-        port: 8000,
-        open: true,
-    },
+    }
 }));

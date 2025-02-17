@@ -335,7 +335,7 @@ ELEMENTS
         .hotkey-grid {
             @apply grid grid-cols-2 grid-rows-3 gap-x-2;
 
-            & > :nth-child(2n+1) {
+            & > :nth-child(2n + 1) {
                 @apply text-center;
             }
         }
@@ -541,6 +541,7 @@ ELEMENTS
                 margin-left 0.3s,
                 width 0.3s;
             @extend .border-color-primary;
+            @extend .background-color-primary;
             /* @extend .background-color-primary; */
 
             &.mobile {

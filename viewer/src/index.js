@@ -38,6 +38,6 @@ if (process.env.NODE_ENV !== 'production') {
         //window.DjVuViewerInstance.loadDocumentByUrl("/djvufile?fname=%E5%9C%B0%E5%9B%BE.djvu");
         //window.DjVuViewerInstance.loadDocumentByUrl("/djvufile?fname=%E5%9C%B0%E5%9B%BE.djvu&cd=attachment");
 
-        //window.DjVuViewerInstance.loadDocumentByUrl("http://localhost/djvuMap/obs-thats-an-error");
+        // window.DjVuViewerInstance.loadDocumentByUrl("http://localhost/djvuMap/obs-thats-an-error");
     });
 }
