@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-import colors from 'tailwindcss/colors';
-import forms from '@tailwindcss/forms';
+import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
     darkMode: "selector",
@@ -43,12 +42,8 @@ export default {
         },
     },
     plugins: [
-        colors,
-        forms,
-        require('postcss-import'),
-        require('postcss-nesting'),
-        require('@tailwindcss/nesting'),
+        require("@tailwindcss/forms"),
+        require("@tailwindcss/typography"),
         require("tailwindcss-animated"),
-        require("@tailwindcss/typography")
     ],
 };
