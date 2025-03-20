@@ -57,9 +57,9 @@ export default defineConfig(({ command }) => ({
         }
     ],
     build: {
-        assetsDir: "",
         minify: "terser",
         cssMinify: "terser",
+        assetsDir: "",
         reportCompressedSize: false,
         copyPublicDir: false,
         terserOptions: {

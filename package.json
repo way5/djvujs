@@ -1,11 +1,12 @@
 {
     "name": "djvu.js_project",
     "scripts": {
+        "up": "cd ./library && npm update && cd ../viewer && npm update",
         "dev": "cd ./viewer && npm run start",
         "make": "npm run install && npm run build",
-        "install": "cd library && npm install && cd .. && cd viewer && npm install && cd ..",
+        "install": "cd ./library && npm install && cd ../viewer && npm install",
         "clean": "git clean -fdX --exclude=!/.*/",
-        "build": "cd library && npm run build && cd .. && cd viewer && npm run build && cd .. && npm run copy",
+        "build": "cd ./library && npm run build && cd ../viewer && npm run build && cd .. && npm run copy",
         "copy": "node build.js copy",
         "remake": "npm run clean && npm run install && npm run build",
         "_ext": "cd extension && npx web-ext build -n {name}-v{manifest_version}-{version}.zip -o",
