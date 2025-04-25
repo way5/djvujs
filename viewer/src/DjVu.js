@@ -3,10 +3,10 @@
  * Because of which I can't address to the global object directly via window.DjVu
  * Also it encapsulates the logic of getting the global DjVu object.
  */
-if (typeof DjVu !== 'object') {
+if (typeof window.DjVu !== 'object') {
     throw new Error("There is no DjVu object! You have to include the DjVu.js library first!");
 }
 
-const djvu = DjVu; // eslint-disable-line
+const DjVu = window.DjVu; // eslint-disable-line
 
-export default djvu;
+export default DjVu;
