@@ -1,15 +1,15 @@
 {
     "name": "djvu.js_project",
     "scripts": {
-        "up": "cd ./library && npm update && cd ../viewer && npm update",
-        "dev": "cd ./viewer && npm run start",
+        "up": "cd ./library && npm update && cd ../viewer && npm update && cd ..",
+        "dev": "cd ./viewer && npm run start && cd ..",
         "make": "npm run install && npm run build",
-        "install": "cd ./library && npm install && cd ../viewer && npm install",
+        "install": "cd ./library && npm install && cd ../viewer && npm install && cd ..",
         "clean": "git clean -fdX --exclude=!/.*/",
         "build": "cd ./library && npm run build && cd ../viewer && npm run build && cd .. && npm run copy",
         "copy": "node build.js copy",
         "remake": "npm run clean && npm run install && npm run build",
-        "_ext": "cd extension && npx web-ext build -n {name}-v{manifest_version}-{version}.zip -o",
+        "_ext": "cd ./extension && npx web-ext build -n {name}-v{manifest_version}-{version}.zip -o && cd ..",
         "ext2": "node build.js v2 && npm run _ext",
         "ext3": "node build.js v3 && npm run _ext",
         "ext": "npm run ext2 && npm run ext3"

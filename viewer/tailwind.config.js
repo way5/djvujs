@@ -2,9 +2,9 @@
 import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
-    darkMode: "selector",
+    darkMode: ['selector', '[class*="dark"]'],
     mode: "jit",
-    important: true,
+    // important: true,
     content: [
         "./src/**/*.{js,ts,jsx,tsx}",
     ],

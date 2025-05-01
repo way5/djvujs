@@ -13,14 +13,19 @@ async function copy() {
     if (!fs.existsSync(buildFolder)) fs.mkdirSync(buildFolder);
     if (!fs.existsSync(extensionFolder)) fs.mkdirSync(extensionFolder);
 
-    const copyFile = (path) => {
+    const copyToExtension = (path) => {
         const fileName = path.split("/").at(-1);
-        // fs.copyFileSync(path, buildFolder + fileName);
         fs.copyFileSync(path, extensionFolder + fileName);
     };
 
-    copyFile("viewer/dist/djvu_viewer.js");
-    copyFile("library/dist/djvu.js");
+    const copyToBuild = (path) => {
+        const fileName = path.split("/").at(-1);
+        fs.copyFileSync(path, buildFolder + fileName);
+    };
+
+    copyToExtension("viewer/dist/djvu_viewer.js");
+    copyToExtension("library/dist/djvu.js");
+    copyToBuild("viewer/dist/djvu.css");
 
     fs.rmSync(bundleName, { force: true });
 
@@ -29,9 +34,9 @@ async function copy() {
         const viewer = fs.readFileSync("viewer/dist/djvu_viewer.js", "utf8");
         fs.appendFileSync(bundleName, lib);
         fs.appendFileSync(bundleName, viewer);
-        console.log(`- Bundle created at: ${bundleName}`);
+        console.log(`- Bundle file has been created at: ${bundleName}`);
     } catch (err) {
-        throw new Error(`Error while creating bundle: ${err.message}`);
+        throw new Error(`Error while creating bundle file: ${err.message}`);
     }
 
     console.info(

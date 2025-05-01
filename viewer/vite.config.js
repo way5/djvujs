@@ -24,14 +24,14 @@ export default defineConfig(({ command }) => ({
         sassDts({
             enabledMode: ["development", "production"],
             sourceDir: path.resolve(__dirname, "./src"),
-            outputDir: path.resolve(__dirname, "./dist")
+            outputDir: path.resolve(__dirname, "./dist"),
         }),
         viteStaticCopy({
             targets: [
                 {
-                    src: './src/app.scss',
-                    dest: '',
-                    rename: (name, extension, fullPath) => `djvu.${extension}`
+                    src: "./src/app.scss",
+                    dest: "",
+                    rename: (name, extension, fullPath) => `djvu.${extension}`,
                 },
             ],
         }),
@@ -54,12 +54,13 @@ export default defineConfig(({ command }) => ({
 
                 server.middlewares.use(serveStatic("../library/assets"));
             },
-        }
+        },
     ],
     build: {
         minify: "terser",
         cssMinify: "terser",
         assetsDir: "",
+        cssCodeSplit: false,
         reportCompressedSize: false,
         copyPublicDir: false,
         terserOptions: {
@@ -75,13 +76,11 @@ export default defineConfig(({ command }) => ({
             },
             output: {
                 assetFileNames: (a) => {
-                    if (a.name === "app.css") return "djvu.css";
-                    else if (a.name === "index.js") return "djvu_viewer.js";
-                    else if (a.name === "app.scss") return "djvu.scss";
-                    else return a.name;
+                    if (a.names.includes("style.css")) return "djvu.css";
+                    else return a.names[0];
                 },
                 entryFileNames: "djvu_viewer.js",
             },
         },
-    }
+    },
 }));
