@@ -18,8 +18,8 @@ const port = process.argv[2] || 9000;
 
 const app = express();
 
-app.use(express.static(__dirname));
-app.use(express.static(__dirname + '/debug'));
+app.use(express.static(import.meta.dirname));
+app.use(express.static(import.meta.dirname + '/debug'));
 app.use('/tests', express.static('./tests', { index: 'tests.html' }));
 
 // used to debug the request interception in the extension according to the headers
@@ -36,7 +36,7 @@ app.get('/get_embed_djvu_html', (req, res) => {
     res.send(`
 <!DOCTYPE html>
 <html lang="en">
-   <body><embed type="image/x-djvu" src="${req.query.file}" width="600"></body>     
+   <body><embed type="image/x-djvu" src="${req.query.file}" width="600"></body>
 </html>
 `);
 });

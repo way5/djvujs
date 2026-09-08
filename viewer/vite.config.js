@@ -23,8 +23,8 @@ export default defineConfig(({ command }) => ({
         }),
         sassDts({
             enabledMode: ["development", "production"],
-            sourceDir: path.resolve(__dirname, "./src"),
-            outputDir: path.resolve(__dirname, "./dist"),
+            sourceDir: path.resolve(import.meta.dirname, "./src"),
+            outputDir: path.resolve(import.meta.dirname, "./dist"),
         }),
         viteStaticCopy({
             targets: [

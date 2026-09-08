@@ -7,14 +7,14 @@
         "build": "NODE_ENV='production' rollup --config"
     },
     "devDependencies": {
-        "@rollup/plugin-commonjs": "^28.0.2",
-        "@rollup/plugin-node-resolve": "^16.0.0",
-        "@rollup/plugin-terser": "^0.4.4",
+        "@rollup/plugin-commonjs": "^29.0.3",
+        "@rollup/plugin-node-resolve": "^16.0.3",
+        "@rollup/plugin-terser": "^1.0.0",
         "colors": "^1.4.0",
-        "express": "^4.21.2",
-        "rollup": "^4.34.8",
+        "express": "^5.2.1",
+        "rollup": "^4.63.1",
         "rollup-plugin-cleanup": "^3.2.1",
-        "ws": "^8.18.0"
+        "ws": "^8.21.3"
     },
     "dependencies": {
         "pngjs": "^7.0.0"
