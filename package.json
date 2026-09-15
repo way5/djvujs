@@ -1,7 +1,7 @@
 {
     "name": "djvu.js_project",
     "scripts": {
-        "up": "cd ./library && npm update && cd ../viewer && npm update && cd ..",
+        "up": "cd ./library && npm update && cd ../viewer && npx update-browserslist-db@latest && npm update && cd ..",
         "dev": "cd ./viewer && npm run start && cd ..",
         "make": "npm run install && npm run build",
         "install": "cd ./library && npm install && cd ../viewer && npm install && cd ..",
